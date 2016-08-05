@@ -1,9 +1,10 @@
-defmodule Steemex do
+defmodule Steemex.WsHandler do
+  @temp_steem_wss 'wss://steemit.com/wstmp3'
 
   def start_link do
     :crypto.start()
     :ssl.start()
-    :websocket_client.start_link('wss://steemit.com/wstmp3', __MODULE__, name: Steemex)
+    :websocket_client.start_link(@temp_steem_wss, __MODULE__, name: Steemex)
   end
 
   def init(params) do
