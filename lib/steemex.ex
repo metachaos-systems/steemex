@@ -2,7 +2,7 @@ defmodule Steemex do
   alias Poison, as: JSON
   @temp_steem_wss 'wss://steemit.com/wstmp3'
   @doc """
-  Starts the WebSocket server for given ws URL. Received Socket.Message's
+  Starts the WebSocket server for given ws URL. Received messages
   are forwarded to the sender pid
   """
   def start_link(sender) do
@@ -16,6 +16,7 @@ defmodule Steemex do
   end
 
   def onconnect(_ws_req, state) do
+    IO.puts("connected")
     {:ok, state}
   end
 
@@ -56,7 +57,7 @@ defmodule Steemex do
   end
 
   @doc """
-  Sends an event to the WebSocket server per the Message protocol
+  Sends an event to the WebSocket server
   """
   def send_event(server_pid, msg) do
     send server_pid, {:send, msg}
