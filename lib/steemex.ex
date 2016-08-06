@@ -24,6 +24,10 @@ defmodule Steemex do
     {:reconnect, state}
   end
 
+  def call(sock_pid, params) do
+     send sock_pid, {:send, %{jsonrpc: "2.0", params: params, id: 1, method: "call"}}
+  end
+
   @doc """
   Closes the socket
   """
