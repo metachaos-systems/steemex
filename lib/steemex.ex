@@ -15,11 +15,10 @@ defmodule Steemex do
   end
 
   def init([sender], _conn_state \\ []) do
-    {:once, %{sender: sender, id: 0}}
+    {:once, %{sender: sender}}
   end
 
   def onconnect(_ws_req, state) do
-    IO.puts("connected")
     {:ok, state}
   end
 
@@ -29,7 +28,7 @@ defmodule Steemex do
 
   def call(sock_pid, params) do
      id = round(:rand.uniform * 1.0e10)
-     send sock_pid, {:send, %{jsonrpc: "2.0", params: params, id: id, method: "call"}}
+     send_event sock_pid, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
      id
   end
 
