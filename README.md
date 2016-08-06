@@ -1,6 +1,8 @@
 # Steemex
 
-**TODO: Add description**
+Elixir websocket client for Steemd. Provides an interface to Steem JSONRPC protocol.
+
+Currently in development
 
 ## Installation
 
@@ -14,11 +16,20 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
-  2. Ensure `steemex` is started before your application:
+## Example
 
-    ```elixir
-    def application do
-      [applications: [:steemex]]
-    end
-    ```
+```elixir
+# Start Steemex WS server process which is registered with name Steemex.WS
+Steemex.start_link( self() )
+# Steemex.call returns id of your JSONRPC call if you need to track it
+id = Steemex.call(Steemex.WS, ["database_api", "get_dynamic_global_properties", []])
+# flush the mailbox to log incoming message to iex
+flush
+```
 
+## Roadmap
+
+* Supervisor and option for a developer to provide handler process in the config
+* Utility functions
+* Add more types and structs
+* More tests and docs
