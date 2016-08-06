@@ -14,9 +14,7 @@ Currently in development.
     end
     ```
 
-  2. Run ```
-    mix deps.get
-  ```
+  2. Run `mix deps.get`
 
 ## Example
 
@@ -26,6 +24,8 @@ First, add preferred WS url in the config.
 config :steemex,
   url: "STEEM_URL"
 ```
+
+Then, launch iex
 
 ```elixir
 # Start Steemex WS server process which is registered with name Steemex.WS
