@@ -2,11 +2,9 @@
 
 Elixir websocket client for Steemd. Provides an interface to Steem JSONRPC protocol.
 
-Currently in development
+Currently in development.
 
 ## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add `steemex` to your list of dependencies in `mix.exs`:
 
@@ -16,7 +14,18 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
+  2. Run ```
+    mix deps.get
+  ```
+
 ## Example
+
+First, add preferred WS url in the config.
+
+```elixir
+config :steemex,
+  url: "STEEM_URL"
+```
 
 ```elixir
 # Start Steemex WS server process which is registered with name Steemex.WS
@@ -31,5 +40,5 @@ flush
 
 * Supervisor and option for a developer to provide handler process in the config
 * Utility functions
-* Add more types and structs
+* Add types and structs
 * More tests and docs
