@@ -37,7 +37,7 @@ defmodule Steemex.Mixfile do
 
   defp description do
     """
-    Elixir WS library and utilities for steem blockchain
+    Elixir websockets library and utilities for Steem blockchain
     """
   end
 
@@ -47,7 +47,7 @@ defmodule Steemex.Mixfile do
      files: ["lib", "priv", "mix.exs", "README*", "LICENSE*"],
      maintainers: ["ontofractal"],
      licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/cyberpunk_ventures/steemex"}
+     links: %{"GitHub" => "https://github.com/cyberpunk-ventures/steemex"}
    ]
   end
 end

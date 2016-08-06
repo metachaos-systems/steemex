@@ -1,8 +1,6 @@
 # Steemex
 
-Elixir websocket client for Steemd. Provides an interface to Steem JSONRPC protocol.
-
-Currently in development.
+Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Currently under development.
 
 ## Installation
 
@@ -18,7 +16,7 @@ Currently in development.
 
 ## Example
 
-First, add preferred WS url in the config.
+First, add a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
 
 ```elixir
 config :steemex,
@@ -28,11 +26,11 @@ config :steemex,
 Then, launch iex
 
 ```elixir
-# Start Steemex WS server process which is registered with name Steemex.WS
+# Start Steemex server process which has a locally registered name Steemex.WS
 Steemex.start_link( self() )
-# Steemex.call returns id of your JSONRPC call if you need to track it
+# Steemex.call returns id of your JSONRPC call if you need to reference it in the future
 id = Steemex.call(Steemex.WS, ["database_api", "get_dynamic_global_properties", []])
-# flush the mailbox to log incoming message to iex
+# flush the process mailbox to log incoming message(es)
 flush
 ```
 
