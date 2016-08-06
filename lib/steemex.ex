@@ -10,8 +10,8 @@ defmodule Steemex do
     steem_wss = Application.get_env(:steemex, :url) |> String.to_charlist
     {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [sender] )
     # websocket_client doesn't pass options to the gen_server, so registering manually
-    Process.register(sock_pid, Steemex)
-    {:ok, Steemex}
+    Process.register(sock_pid, Steemex.WS)
+    {:ok, Steemex.WS}
   end
 
   def init([sender], _conn_state \\ []) do
