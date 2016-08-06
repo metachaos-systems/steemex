@@ -8,7 +8,10 @@ defmodule Steemex do
   def start_link(sender) do
     :crypto.start
     :ssl.start
-    :websocket_client.start_link(@temp_steem_wss, __MODULE__, [sender])
+    # websocket_client doesn't pass
+    {:ok, sock_pid} = :websocket_client.start_link(@temp_steem_wss, __MODULE__, [sender] )
+    Process.register(sock_pid, Steemex)
+    {:ok, Steemex}
   end
 
   def init([sender], _conn_state \\ []) do
@@ -25,7 +28,9 @@ defmodule Steemex do
   end
 
   def call(sock_pid, params) do
-     send sock_pid, {:send, %{jsonrpc: "2.0", params: params, id: 1, method: "call"}}
+     id = round(:rand.uniform * 1.0e10)
+     send sock_pid, {:send, %{jsonrpc: "2.0", params: params, id: id, method: "call"}}
+     id
   end
 
   @doc """
