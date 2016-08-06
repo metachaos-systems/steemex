@@ -26,12 +26,13 @@ config :steemex,
 Then, launch iex
 
 ```elixir
-# Start Steemex server process which has a locally registered name Steemex.WS
 Steemex.start_link( self() )
-# Steemex.call returns id of your JSONRPC call if you need to reference it in the future
+# Start Steemex server process which has a locally registered name Steemex.WS
 id = Steemex.call(Steemex.WS, ["database_api", "get_dynamic_global_properties", []])
-# flush the process mailbox to log incoming message(es)
+# Steemex.call returns id of your JSONRPC call if you need to reference it in the future
+# id is randomly generated
 flush
+# flush the process mailbox to log incoming message(es)
 ```
 
 ## Roadmap
