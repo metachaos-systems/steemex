@@ -1,6 +1,5 @@
 defmodule Steemex do
   alias Poison, as: JSON
-  @temp_steem_wss 'wss://steemit.com/wstmp3'
   @doc """
   Starts the WebSocket server for given ws URL. Received messages
   are forwarded to the sender pid
@@ -8,8 +7,9 @@ defmodule Steemex do
   def start_link(sender) do
     :crypto.start
     :ssl.start
-    # websocket_client doesn't pass
-    {:ok, sock_pid} = :websocket_client.start_link(@temp_steem_wss, __MODULE__, [sender] )
+    steem_wss = Application.get_env(:steemex, :url) |> String.to_charlist
+    {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [sender] )
+    # websocket_client doesn't pass options to the gen_server, so registering manually
     Process.register(sock_pid, Steemex)
     {:ok, Steemex}
   end
@@ -27,7 +27,7 @@ defmodule Steemex do
   end
 
   def call(sock_pid, params) do
-     id = round(:rand.uniform * 1.0e10)
+     id = round(:rand.uniform * 1.0e16)
      send_event sock_pid, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
      id
   end
@@ -44,7 +44,7 @@ defmodule Steemex do
   forwards message to client sender process
   """
   def websocket_handle({:text, msg}, _conn_state, state) do
-    send state.sender, JSON.decode!(msg, opcode: :text)
+    send state.sender, JSON.decode!(msg)
     {:ok, state}
   end
 
@@ -52,7 +52,6 @@ defmodule Steemex do
   Sends JSON encoded message to remote WS endpoint
   """
   def websocket_info({:send, msg}, _conn_state, state) do
-    # msg = Map.put(msg, :id, to_string(state.id + 1))
     {:reply, {:text, json!(msg)}, state}
   end
 
