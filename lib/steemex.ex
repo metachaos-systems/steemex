@@ -1,13 +1,12 @@
 defmodule Steemex do
   use Application
 
-  def start_link do
+  def start(_type, _args) do
     import Supervisor.Spec, warn: false
-    handler = Application.get_env(:steemex, :handler)
-    {:ok, handler_pid} = handler.start_link
+
     children = [
-      handler_pid,
-      worker(Steemex.IdAgent, [])
+      worker(Steemex.IdAgent, []),
+      worker(Steemex.WS, [])
     ]
     opts = [strategy: :one_for_one, name: CyberpunkVentures.Supervisor]
     Supervisor.start_link(children, opts)

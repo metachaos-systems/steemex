@@ -17,6 +17,7 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
 ## Example
 
 First, add a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
+Then, provide a handler module in the config file. 
 
 ```elixir
 config :steemex,
