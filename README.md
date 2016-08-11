@@ -1,6 +1,8 @@
 # Steemex
 
-Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Currently under development.
+Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is now a supervised application with two workers and a configurable handler for responses to JSONRPC calls.  
+
+Steemex is under active development.
 
 ## Installation
 
@@ -12,11 +14,16 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
     end
     ```
 
-  2. Run `mix deps.get`
+  2. Add 'steemex' to applications in `mix.exs`:
+    ```elixir
+    def application do
+      [applications: [:logger, :steemex]]
+    end
+    ```
 
 ## Example
 
-First, add a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
+First, configure a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
 Then, provide a handler module in the config file.
 
 ```elixir
@@ -25,7 +32,8 @@ config :steemex,
   handler: SteemexHandlerModule
 ```
 
-Example of SteemexHandlerModule
+Example of SteemexHandlerModule. Why GenServer? Any advanced aggregation or analysis of blockchain data requires
+at least some state management.
 
 ```elixir
 defmodule SteemexHandler do
@@ -51,7 +59,7 @@ end
 
 ## Roadmap
 
-* Supervisor and option for a developer to provide handler process in the config
+* ~~Supervisor and option for a developer to provide handler process in the config~~
 * Utility functions
 * Add types and structs
 * More tests and docs
