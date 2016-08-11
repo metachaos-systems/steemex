@@ -7,14 +7,13 @@ defmodule SteemexHandler do
   end
 
   def handle_cast({["database_api", "get_dynamic_global_properties", []], data}, _) do
-    IO.inspect(data)
+    Logger.debug inspect(data)
     {:noreply, []}
   end
 
   def handle_cast({msg_name, _}, _) do
-    Logger.warn("No known handler function for this message #{msg_name}")
+    Logger.debug("No known handler function for this message #{msg_name}")
     {:noreply, []}
   end
-
 
 end

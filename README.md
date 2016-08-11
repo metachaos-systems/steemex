@@ -17,23 +17,36 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
 ## Example
 
 First, add a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
-Then, provide a handler module in the config file. 
+Then, provide a handler module in the config file.
 
 ```elixir
 config :steemex,
-  url: "STEEM_URL"
+  url: "STEEM_URL",
+  handler: SteemexHandlerModule
 ```
 
-Then, launch iex
+Example of SteemexHandlerModule
 
 ```elixir
-Steemex.start_link( self() )
-# Start Steemex server process which has a locally registered name Steemex.WS
-id = Steemex.call(Steemex.WS, ["database_api", "get_dynamic_global_properties", []])
-# Steemex.call returns id of your JSONRPC call if you need to reference it in the future
-# id is randomly generated
-flush
-# flush the process mailbox to log incoming message(es)
+defmodule SteemexHandler do
+  use GenServer
+  require Logger
+
+  def start_link(_params \\ []) do
+    GenServer.start_link(__MODULE__, [])
+  end
+
+  def handle_cast({["database_api", "get_dynamic_global_properties", []], data}, _) do
+    Logger.debug inspect(data)
+    {:noreply, []}
+  end
+
+  def handle_cast({msg_name, _}, _) do
+    Logger.debug("No known handler function for this message #{msg_name}")
+    {:noreply, []}
+  end
+
+end
 ```
 
 ## Roadmap
