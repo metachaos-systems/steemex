@@ -32,7 +32,8 @@ defmodule Steemex.Mixfile do
     [
       {:websocket_client, github: "sanmiguel/websocket_client" },
       {:poison, "~> 2.0"},
-      {:credo, ">= 0.0.0"}
+      {:credo, ">= 0.0.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
