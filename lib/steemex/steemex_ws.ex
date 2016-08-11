@@ -8,7 +8,7 @@ defmodule Steemex.WS do
     {:ok, handler_pid} = if handler do
        {:ok, handler}
      else
-        Application.get_env(:steemex, :handler)
+        handler = Application.get_env(:steemex, :handler)
         handler.start_link
     end
     Process.register(handler_pid, Steemex.Handler)
