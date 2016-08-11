@@ -1,6 +1,6 @@
 defmodule Steemex.WS do
   alias Poison, as: JSON
-  @doc """
+  @moduledoc """
   Starts the WebSocket server for given ws URL. Received messages
   are forwarded to the sender pid
   """
@@ -15,16 +15,16 @@ defmodule Steemex.WS do
 
     :crypto.start
     :ssl.start
-    steem_wss = Application.get_env(:steemex, :url) |> String.to_charlist
+    steem_wss = :steemex |> Application.get_env(:url) |> String.to_charlist
 
-    {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [self()] )
+    {:ok, sock_pid} = :websocket_client.start_link( steem_wss, __MODULE__, [] )
     # websocket_client doesn't pass options to the gen_server, so registering manually
     Process.register(sock_pid, Steemex.WS)
     {:ok, sock_pid}
   end
 
-  def init([sender], _conn_state \\ []) do
-    {:once, %{sender: sender}}
+  def init([], _conn_state \\ []) do
+    {:once, %{}}
   end
 
   def onconnect(_ws_req, state) do
@@ -68,7 +68,6 @@ defmodule Steemex.WS do
   def websocket_terminate(_reason, _conn_state, _state) do
     :ok
   end
-
 
   defp json!(map), do: JSON.encode!(map)
 end

@@ -1,4 +1,8 @@
 defmodule Steemex.IdAgent do
+  @moduledoc """
+  Holds state with data linking jsonrpc call ids and params for pattern
+  matching in the handler
+  """
 
   def start_link do
     Agent.start_link(fn -> Map.new end, name: __MODULE__)
