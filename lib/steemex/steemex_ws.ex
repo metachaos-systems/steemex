@@ -50,7 +50,7 @@ defmodule Steemex.WS do
     data = JSON.decode!(msg)
     id = data["id"]
     params = Steemex.IdAgent.get(id)
-    send Steemex.Handler, {params, data}
+    GenServer.cast(Steemex.Handler, {params, data})
     {:ok, state}
   end
 
