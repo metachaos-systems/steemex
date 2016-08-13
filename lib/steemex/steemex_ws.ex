@@ -3,17 +3,17 @@ defmodule Steemex.WS do
   @moduledoc """
   Starts the WebSocket server for given ws URL. Received messages
   are forwarded to the sender pid
-
   """
-  @configured_handler Application.get_env(:steemex, :handler)
-  @url Application.get_env(:steemex, :url)
 
   def start_link(handler_pid \\ nil) do
     :crypto.start
     :ssl.start
 
-    unless @configured_handler, do: throw("Steemex Handler module is NOT configured.")
-    unless @configured_url, do: throw("Steemex WS url is NOT configured.")
+    configured_handler = Application.get_env(:steemex, :handler)
+    url = Application.get_env(:steemex, :url)
+
+    unless configured_handler, do: throw("Steemex Handler module is NOT configured.")
+    unless url, do: throw("Steemex WS url is NOT configured.")
 
     {:ok, handler_pid} = if handler_pid do
        {:ok, handler_pid}
