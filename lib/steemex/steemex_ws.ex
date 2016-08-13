@@ -18,12 +18,12 @@ defmodule Steemex.WS do
     {:ok, handler_pid} = if handler_pid do
        {:ok, handler_pid}
      else
-        @configured_handler.start_link
+        configured_handler.start_link
     end
 
     Process.register(handler_pid, Steemex.Handler)
 
-    steem_wss = String.to_charlist(@url)
+    steem_wss = String.to_charlist(url)
 
     {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [])
     # websocket_client doesn't pass options to the gen_server, so registering manually
