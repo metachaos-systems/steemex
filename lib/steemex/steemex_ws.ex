@@ -5,24 +5,29 @@ defmodule Steemex.WS do
   are forwarded to the sender pid
   """
   def start_link(handler \\ nil) do
+    :crypto.start
+    :ssl.start
+
     {:ok, handler_pid} = if handler do
        {:ok, handler}
      else
-        handler = Application.get_env(:steemex, :handler)
-        handler.start_link
+        configured_handler = Application.get_env(:steemex, :handler)
+        unless configured_handler, do: throw("Steemex Handler module is NOT configured.")
+        configured_handler.start_link
     end
 
     Process.register(handler_pid, Steemex.Handler)
-
-    :crypto.start
-    :ssl.start
-    steem_wss = :steemex |> Application.get_env(:url) |> String.to_charlist
+  
+    url = Application.get_env(:steemex, :url)
+    unless configured_handler, do: throw("Steemex WS url is NOT configured.")
+    steem_wss = String.to_charlist(url)
 
     {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [])
     # websocket_client doesn't pass options to the gen_server, so registering manually
     Process.register(sock_pid, Steemex.WS)
     {:ok, sock_pid}
   end
+
 
   def init([], _conn_state \\ []) do
     {:once, %{}}
