@@ -19,3 +19,4 @@ erl_crash.dump
 *.beam
 
 dev.fish
+/data

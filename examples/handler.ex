@@ -11,8 +11,9 @@ defmodule SteemexHandler do
     {:noreply, []}
   end
 
-  def handle_cast({msg_name, _}, _) do
-    Logger.debug("No known handler function for this message #{msg_name}")
+  def handle_cast({msg_name, data}, _) do
+    # Logger.debug("No known handler function for this message #{msg_name}")
+    Logger.debug inspect(data)
     {:noreply, []}
   end
 
