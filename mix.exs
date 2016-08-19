@@ -3,7 +3,7 @@ defmodule Steemex.Mixfile do
 
   def project do
     [app: :steemex,
-     version: "0.2.1",
+     version: "0.2.2",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -32,8 +32,9 @@ defmodule Steemex.Mixfile do
     [
       {:websocket_client, github: "sanmiguel/websocket_client" },
       {:poison, "~> 2.0"},
-      {:credo, ">= 0.0.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:credo, ">= 0.0.0", only: [:test, :dev]},
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:exconstructor, ">= 0.0.0"}
     ]
   end
 
