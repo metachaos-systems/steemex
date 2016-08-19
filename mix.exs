@@ -1,4 +1,4 @@
-defmodule Steemex.Mixfile do
+  defmodule Steemex.Mixfile do
   use Mix.Project
 
   def project do
@@ -16,7 +16,8 @@ defmodule Steemex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger],
+    mod: {Steemex, []}]
   end
 
   # Dependencies can be Hex packages:

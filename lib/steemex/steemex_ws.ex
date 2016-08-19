@@ -13,6 +13,7 @@ defmodule Steemex.WS do
 
     {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [handler_fn])
     # websocket_client doesn't pass options to the gen_server, so registering manually
+
     Process.register(sock_pid, Steemex.WS)
     {:ok, sock_pid}
   end
