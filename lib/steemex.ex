@@ -4,11 +4,17 @@ defmodule Steemex do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    handler_mod = Application.get_env(:steemex, :handler)
+    url = Application.get_env(:steemex, :url)
+
+    unless handler_mod, do: throw("Steemex Handler module is NOT configured.")
+    unless url, do: throw("Steemex WS url is NOT configured.")
+
     children = [
       worker(Steemex.IdAgent, []),
-      worker(Steemex.WS, [])
+      worker(Steemex.WS, [handler_mod.handle_jsonrpc_call, url])
     ]
-    opts = [strategy: :one_for_one, name: CyberpunkVentures.Supervisor]
+    opts = [strategy: :one_for_one, name: Steemex.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
