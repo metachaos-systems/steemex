@@ -32,16 +32,19 @@ config :steemex,
   handler: SteemexHandlerModule
 ```
 
-Example of SteemexHandlerModule. Why GenServer? Any advanced aggregation or analysis of blockchain data requires
-at least some state management.
+Example of SteemexHandlerModule. You need a handler module with a `handle_jsonrpc_call` callback. GenServer handler implementation is recommended as any advanced aggregation or analysis of blockchain data requires some state management.
 
 ```elixir
-defmodule SteemexHandler do
+defmodule Steemex.Handler do
   use GenServer
   require Logger
 
   def start_link(_params \\ []) do
     GenServer.start_link(__MODULE__, [])
+  end
+
+  def handle_jsonrpc_call(id, call_params, data) do
+      GenServer.cast(__MODULE__, {id, call_params, data} )
   end
 
   def handle_cast({["database_api", "get_dynamic_global_properties", []], data}, _) do
