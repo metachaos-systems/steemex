@@ -1,4 +1,4 @@
-defmodule SteemexHandler do
+defmodule Steemex.Handler do
   use GenServer
   require Logger
 
@@ -7,6 +7,7 @@ defmodule SteemexHandler do
   end
 
   def handle_jsonrpc_call(id, call_params, data) do
+    Logger.debug "Received jsonrpc call response"
     GenServer.cast(__MODULE__, {id, call_params, data} )
   end
 

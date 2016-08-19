@@ -31,4 +31,4 @@ use Mix.Config
 
 config :steemex,
   url: System.get_env("STEEM_URL"),
-  handler: SteemexHandler
+  handler: Steemex.Handler

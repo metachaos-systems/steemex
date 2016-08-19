@@ -12,7 +12,7 @@ defmodule Steemex do
 
     children = [
       worker(Steemex.IdAgent, []),
-      worker(Steemex.WS, [handler_mod.handle_jsonrpc_call, url])
+      worker(Steemex.WS, [&handler_mod.handle_jsonrpc_call/3, url])
     ]
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
     Supervisor.start_link(children, opts)

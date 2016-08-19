@@ -45,7 +45,7 @@ defmodule Steemex.WS do
     data = JSON.decode!(msg)
     id = data["id"]
     params = Steemex.IdAgent.get(id)
-    state.handler_fn.({params, data})
+    state.handler_fn.(id, params, data)
     {:ok, state}
   end
 
