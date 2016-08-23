@@ -25,9 +25,12 @@ defmodule Steemex do
   end
 
   def get_block(height) do
-    Steemex.call ["database_api", "get_block", [height]] 
+    Steemex.call ["database_api", "get_block", [height]]
   end
 
+  def get_block(user, permalink) do
+    Steemex.call ["database_api", "get_content", [user, permalink]]
+  end
   @doc """
   Sends an event to the WebSocket server
   """
