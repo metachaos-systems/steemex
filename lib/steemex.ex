@@ -28,7 +28,7 @@ defmodule Steemex do
     Steemex.call ["database_api", "get_block", [height]]
   end
 
-  def get_block(user, permalink) do
+  def get_content(user, permalink) do
     Steemex.call ["database_api", "get_content", [user, permalink]]
   end
   @doc """
