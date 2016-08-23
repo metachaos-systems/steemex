@@ -8,10 +8,8 @@ defmodule SteemexTest do
     handler_fn = fn id, call_params, data  ->
       send(test_pid, {id, call_params, data})
     end
-
     Steemex.IdAgent.start_link
     Steemex.WS.start_link(handler_fn, System.get_env("STEEM_URL"))
-
     example_params = ["database_api", "get_dynamic_global_properties", []]
 
     Steemex.call(example_params)

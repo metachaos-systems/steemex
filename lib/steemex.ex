@@ -24,6 +24,10 @@ defmodule Steemex do
      send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
   end
 
+  def get_block(height) do
+    Steemex.call ["database_api", "get_block", [height]] 
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """
