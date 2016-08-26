@@ -3,7 +3,7 @@ defmodule SteemexTest do
   doctest Steemex
 
 
-  test "client call fn for sending a msg to WS process jsonrpc and receives an async msg response" do
+  test "get_dynamic_global_properties call succeeds" do
     test_pid = self()
     handler_fn = fn id, call_params, data  ->
       send(test_pid, {id, call_params, data})

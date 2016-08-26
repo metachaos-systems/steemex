@@ -7,8 +7,7 @@ defmodule Steemex do
     handler_mod = Application.get_env(:steemex, :handler)
     url = Application.get_env(:steemex, :url)
 
-
-    unless is_function(handler_mod.handle_jsonrpc_call), do: throw("Handler module handle_jsonrpc_call is NOT a function")
+    unless is_function(&handler_mod.handle_jsonrpc_call/3), do: throw("Handler module handle_jsonrpc_call is NOT a function")
     unless handler_mod, do: throw("Steemex Handler module is NOT configured.")
     unless url, do: throw("Steemex WS url is NOT configured.")
 
