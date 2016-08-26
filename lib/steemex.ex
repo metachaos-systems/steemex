@@ -26,11 +26,15 @@ defmodule Steemex do
      send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
   end
 
+  def call_sync(params) do
+    # implementation for blocking call goes here, most probably simply by using receive
+  end
+
   def get_block(height) do
     Steemex.call ["database_api", "get_block", [height]]
   end
 
-  def get_content(author, permalink) do
+  def get_content(author, permlink) do
     Steemex.call ["database_api", "get_content", [author, permlink]]
   end
   @doc """
