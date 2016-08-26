@@ -41,8 +41,4 @@ defmodule SteemexTest do
     assert_receive {_, params, %{"id" => _, "result" => %{"previous" => _, "transactions" => _}}}, 5_000
   end
 
-
-
-
-
 end
