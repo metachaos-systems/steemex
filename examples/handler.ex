@@ -2,6 +2,7 @@ defmodule Steemex.Handler do
   use GenServer
   require Logger
 
+  # API
   def start_link(_params \\ []) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -11,6 +12,7 @@ defmodule Steemex.Handler do
     GenServer.cast(__MODULE__, {id, call_params, data} )
   end
 
+  # SERVER
   def handle_cast({id, ["database_api", "get_dynamic_global_properties", []], data}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
