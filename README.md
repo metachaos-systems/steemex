@@ -1,8 +1,9 @@
 # Steemex
 
-Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is now a supervised application with two workers and a configurable handler for responses to JSONRPC calls.  
+Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is a supervised application with two workers and a configurable handler for handling responses to JSONRPC calls response.  
 
-Steemex is under active development.
+Steemex is under active development. In the next versions I'll be adding `Steemex.call_sync` and `Steemex.get_content_sync` functions
+that block the calling process until jsonrpc call response is available.
 
 ## Installation
 
@@ -39,21 +40,30 @@ defmodule Steemex.Handler do
   use GenServer
   require Logger
 
+  # API
   def start_link(_params \\ []) do
-    GenServer.start_link(__MODULE__, [])
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def handle_jsonrpc_call(id, call_params, data) do
-      GenServer.cast(__MODULE__, {id, call_params, data} )
+    Logger.debug "Received jsonrpc call response"
+    GenServer.cast(__MODULE__, {id, call_params, data} )
   end
 
-  def handle_cast({["database_api", "get_dynamic_global_properties", []], data}, _) do
+  # SERVER
+  def handle_cast({id, ["database_api", "get_dynamic_global_properties", []], data}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
   end
 
-  def handle_cast({msg_name, _}, _) do
-    Logger.debug("No known handler function for this message #{msg_name}")
+  def handle_cast({id, ["database_api", "get_state", params], data}, _) do
+    Logger.debug inspect(data)
+    {:noreply, []}
+  end
+
+  def handle_cast({id, msg, data}, _) do
+    Logger.debug("No known handler function for this message")
+    Logger.debug inspect(msg)
     {:noreply, []}
   end
 
@@ -62,7 +72,8 @@ end
 
 ## Roadmap
 
-* ~~Supervisor and option for a developer to provide handler process in the config~~
-* Utility functions
+* More utility functions
+* JSONRPC calls that block a caller process and return response
+* Investigate using GenStage
 * Add types and structs
 * More tests and docs

@@ -29,5 +29,4 @@ defmodule Steemex.Handler do
     {:noreply, []}
   end
 
-
 end
