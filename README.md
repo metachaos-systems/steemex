@@ -74,8 +74,9 @@ end
 
 ## Roadmap
 
-* More utility functions
-* JSONRPC calls that block a caller process and return response
+* Major refactoring
+* Investigate making blocking behaviour as a default
 * Investigate using GenStage
-* Add types and structs
+* Add more utility functions
+* Add more types and structs
 * More tests and docs
