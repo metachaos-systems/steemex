@@ -2,8 +2,7 @@
 
 Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is a supervised application with two workers and a configurable handler for handling responses to JSONRPC calls response.  
 
-Steemex is under active development. In the next versions I'll be adding `Steemex.call_sync` and `Steemex.get_content_sync` functions
-that block the calling process until jsonrpc call response is available.
+Steemex is under active development.
 
 ## Installation
 
@@ -33,7 +32,7 @@ config :steemex,
   handler: SteemexHandlerModule
 ```
 
-You can also use `Steemex.call_sync` that will block the calling process. Call_sync returns a success tuple with JSONRPC endpoint response.
+You can also use `Steemex.call_sync` that will block the calling process. Call_sync returns a success tuple with a JSONRPC endpoint response data.
 
 Example of SteemexHandlerModule. You need a handler module with a `handle_jsonrpc_call` callback. GenServer handler implementation is recommended as any advanced aggregation or analysis of blockchain data requires some state management.
 
