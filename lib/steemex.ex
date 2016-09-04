@@ -30,10 +30,10 @@ defmodule Steemex do
     id = round(:rand.uniform * 1.0e16)
     Steemex.IdAgent.put(id, {params, self()})
     send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
-    response = receive do
-      {:response, response} -> response
+    response_data = receive do
+      {:response, {id, params, data}} -> data
     end
-    {:ok, response}
+    {:ok, response_data}
   end
 
   def get_block(height) do

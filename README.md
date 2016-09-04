@@ -11,7 +11,7 @@ that block the calling process until jsonrpc call response is available.
 
     ```elixir
     def deps do
-      [{:steemex, "~> 0.4.0"}]
+      [{:steemex, "~> 0.5.0"}]
     end
     ```
 
@@ -32,6 +32,8 @@ config :steemex,
   url: "STEEM_URL",
   handler: SteemexHandlerModule
 ```
+
+You can also use `Steemex.call_sync` that will block the calling process. Call_sync returns a success tuple with JSONRPC endpoint response.
 
 Example of SteemexHandlerModule. You need a handler module with a `handle_jsonrpc_call` callback. GenServer handler implementation is recommended as any advanced aggregation or analysis of blockchain data requires some state management.
 

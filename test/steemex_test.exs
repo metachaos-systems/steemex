@@ -31,7 +31,7 @@ defmodule SteemexTest do
     Steemex.WS.start_link(&handler_mod.handle_jsonrpc_call/3, context.steem_url)
     params = context.params.glob_dyn_prop
     {:ok, response} = Steemex.call_sync(params)
-    assert {_, ^params, %{"id" => _, "result" => _}} = response
+    assert %{"id" => _, "result" => _} = response
   end
 
   test "get_content", context do
