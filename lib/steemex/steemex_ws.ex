@@ -1,5 +1,6 @@
 defmodule Steemex.WS do
   alias Poison, as: JSON
+  require Logger
   @moduledoc """
   Starts the WebSocket server for given ws URL. Received messages
   are forwarded to the sender pid
@@ -45,8 +46,13 @@ defmodule Steemex.WS do
   def websocket_handle({:text, msg}, _conn_state, state) do
     data = JSON.decode!(msg)
     id = data["id"]
-    params = Steemex.IdAgent.get(id)
-    state.handler_fn.(id, params, data)
+    {params, pid} = Steemex.IdAgent.get(id)
+    if pid do
+      send(pid, {:response, {id, params, data}})
+    else
+      state.handler_fn.(id, params, data)
+    end
+
     {:ok, state}
   end
 

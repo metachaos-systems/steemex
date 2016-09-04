@@ -21,12 +21,19 @@ defmodule Steemex do
 
   def call(params) do
      id = round(:rand.uniform * 1.0e16)
-     Steemex.IdAgent.put(id, params)
+     Steemex.IdAgent.put(id, {params, nil})
      send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
   end
 
   def call_sync(params) do
     # implementation for blocking call goes here, most probably simply by using receive
+    id = round(:rand.uniform * 1.0e16)
+    Steemex.IdAgent.put(id, {params, self()})
+    send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
+    response = receive do
+      {:response, response} -> response
+    end
+    {:ok, response}
   end
 
   def get_block(height) do

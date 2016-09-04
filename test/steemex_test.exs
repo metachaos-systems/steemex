@@ -10,17 +10,28 @@ defmodule SteemexTest do
         send(pid, {id, call_params, data})
       end
     end
-    %{handler_fn: handler_fn, steem_url: System.get_env("STEEM_URL")}
+    %{
+      handler_fn: handler_fn, steem_url: System.get_env("STEEM_URL"),
+      params:
+      %{glob_dyn_prop: [@db_api, "get_dynamic_global_properties", []]}
+    }
   end
 
   test "get_dynamic_global_properties call succeeds", context do
     handler_fn = context.handler_fn.(self)
     Steemex.WS.start_link(handler_fn, context.steem_url)
-
-    params = [@db_api, "get_dynamic_global_properties", []]
+    params = context.params.glob_dyn_prop
     Steemex.call(params)
 
     assert_receive {_, ^params, %{"id" => _, "result" => _}}, 5_000
+  end
+
+  test "get_dynamic_global_properties call sync succeeds", context do
+    handler_mod = Application.get_env(:steemex, :handler)
+    Steemex.WS.start_link(&handler_mod.handle_jsonrpc_call/3, context.steem_url)
+    params = context.params.glob_dyn_prop
+    {:ok, response} = Steemex.call_sync(params)
+    assert {_, ^params, %{"id" => _, "result" => _}} = response
   end
 
   test "get_content", context do
@@ -40,5 +51,6 @@ defmodule SteemexTest do
 
     assert_receive {_, ^params, %{"id" => _, "result" => %{"previous" => _, "transactions" => _}}}, 5_000
   end
+
 
 end
