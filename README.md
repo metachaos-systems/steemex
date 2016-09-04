@@ -11,7 +11,7 @@ that block the calling process until jsonrpc call response is available.
 
     ```elixir
     def deps do
-      [{:steemex, "~> 0.1.0"}]
+      [{:steemex, "~> 0.4.0"}]
     end
     ```
 
