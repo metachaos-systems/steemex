@@ -43,6 +43,10 @@ defmodule Steemex do
   def get_content(author, permlink) do
     Steemex.call ["database_api", "get_content", [author, permlink]]
   end
+
+  def get_accounts_sync(accounts) do
+    Steemex.call_sync(["database_api", "get_accounts", [[accounts]]])
+  end
   @doc """
   Sends an event to the WebSocket server
   """
