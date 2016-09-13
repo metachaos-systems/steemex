@@ -33,7 +33,11 @@ defmodule Steemex do
     response_data = receive do
       {:response, {id, params, data}} -> data
     end
-    {:ok, response_data}
+
+    case response_data["error"] do
+      nil -> {:ok, response_data}
+      _ -> {:error, response_data}
+    end
   end
 
   def get_block(height) do
@@ -45,7 +49,12 @@ defmodule Steemex do
   end
 
   def get_accounts_sync(accounts) do
-    Steemex.call_sync(["database_api", "get_accounts", [[accounts]]])
+    accounts = List.wrap(accounts)
+    case Steemex.call_sync(["database_api", "get_accounts", [accounts]]) do
+       {:ok, data} ->  {:ok, data["result"]}
+       {:error, err} -> {:error, err}
+    end
+
   end
   @doc """
   Sends an event to the WebSocket server

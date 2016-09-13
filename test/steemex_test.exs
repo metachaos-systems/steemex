@@ -52,5 +52,11 @@ defmodule SteemexTest do
     assert_receive {_, ^params, %{"id" => _, "result" => %{"previous" => _, "transactions" => _}}}, 5_000
   end
 
+  test "get_accounts with multiple args", context do
+    handler_mod = Application.get_env(:steemex, :handler)
+    Steemex.WS.start_link(&handler_mod.handle_jsonrpc_call/3, context.steem_url)
+    {:ok, data} = Steemex.get_accounts_sync(["dan", "ned"])
+    assert %{"name" => _, "id" => _} = hd(data)
+  end
 
 end
