@@ -1,5 +1,7 @@
 defmodule Steemex do
   use Application
+  alias Steemex.IdAgent
+  @db_api "database_api"
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
@@ -12,7 +14,7 @@ defmodule Steemex do
     unless url, do: throw("Steemex WS url is NOT configured.")
 
     children = [
-      worker(Steemex.IdAgent, []),
+      worker(IdAgent, []),
       worker(Steemex.WS, [&handler_mod.handle_jsonrpc_call/3, url])
     ]
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
@@ -20,16 +22,18 @@ defmodule Steemex do
   end
 
   def call(params) do
-     id = round(:rand.uniform * 1.0e16)
-     Steemex.IdAgent.put(id, {params, nil})
-     send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
+     id = gen_id()
+     IdAgent.put(id, {params, nil})
+     send_jsonrpc_call(id, params)
   end
 
   def call_sync(params) do
     # implementation for blocking call goes here, most probably simply by using receive
-    id = round(:rand.uniform * 1.0e16)
-    Steemex.IdAgent.put(id, {params, self()})
-    send_event Steemex.WS, %{jsonrpc: "2.0", params: params, id: id, method: "call"}
+    id = gen_id()
+    IdAgent.put(id, {params, self()})
+
+    send_jsonrpc_call(id, params)
+
     response_data = receive do
       {:response, {id, params, data}} -> data
     end
@@ -41,26 +45,35 @@ defmodule Steemex do
   end
 
   def get_block(height) do
-    Steemex.call ["database_api", "get_block", [height]]
+    Steemex.call [@db_api, "get_block", [height]]
   end
 
   def get_content(author, permlink) do
-    Steemex.call ["database_api", "get_content", [author, permlink]]
+    Steemex.call [@db_api, "get_content", [author, permlink]]
   end
 
   def get_accounts_sync(accounts) do
     accounts = List.wrap(accounts)
-    case Steemex.call_sync(["database_api", "get_accounts", [accounts]]) do
+    case call_sync([@db_api, "get_accounts", [accounts]]) do
        {:ok, data} ->  {:ok, data["result"]}
        {:error, err} -> {:error, err}
     end
-
   end
+
+
   @doc """
   Sends an event to the WebSocket server
   """
   def send_event(server_pid, msg) do
     send server_pid, {:send, msg}
+  end
+
+  defp send_jsonrpc_call(id, params) do
+    send_event Steemex.WS, %{jsonrpc: "2.0", id: id, params: params, method: "call"}
+  end
+
+  defp gen_id do
+    round(:rand.uniform * 1.0e16)
   end
 
 end
