@@ -7,23 +7,18 @@ defmodule Steemex.Handler do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def handle_jsonrpc_call(id, call_params, data) do
-    Logger.debug "Received jsonrpc call response"
-    GenServer.cast(__MODULE__, {id, call_params, data} )
-  end
-
   # SERVER
-  def handle_cast({id, ["database_api", "get_dynamic_global_properties", []], data}, _) do
+  def handle_info({:ws_response, {id, ["database_api", "get_dynamic_global_properties", []], data}}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
   end
 
-  def handle_cast({id, ["database_api", "get_state", params], data}, _) do
+  def handle_info({:ws_response, {id, ["database_api", "get_state", params], data}}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
   end
 
-  def handle_cast({id, msg, data}, _) do
+  def handle_info({:ws_response, {id, msg, data}}, _) do
     Logger.debug("No known handler function for this message")
     Logger.debug inspect(msg)
     {:noreply, []}
