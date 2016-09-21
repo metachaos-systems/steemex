@@ -30,5 +30,4 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :steemex,
-  url: System.get_env("STEEM_URL"),
-  handler: Steemex.Handler
+  url: System.get_env("STEEM_URL")
