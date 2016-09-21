@@ -1,4 +1,4 @@
-defmodule Steemex.IdAgent do
+defmodule Steemex.IdStore do
   @moduledoc """
   Holds state with data linking jsonrpc call ids and params for pattern
   matching in the handler

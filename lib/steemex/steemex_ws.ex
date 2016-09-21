@@ -6,21 +6,20 @@ defmodule Steemex.WS do
   are forwarded to the sender pid
   """
 
-  def start_link(handler_fn, url) do
-    unless is_function(handler_fn), do: throw("handler_fn is NOT a function, but should be")
+  def start_link(url) do
     :crypto.start
     :ssl.start
-    steem_wss = String.to_charlist(url)
+    steem_wss_url = String.to_charlist(url)
 
-    {:ok, sock_pid} = :websocket_client.start_link(steem_wss, __MODULE__, [handler_fn])
+    {:ok, sock_pid} = :websocket_client.start_link(steem_wss_url, __MODULE__, [])
     # websocket_client doesn't pass options to the gen_server, so registering manually
     Process.register(sock_pid, Steemex.WS)
     {:ok, sock_pid}
   end
 
 
-  def init([handler_fn], _conn_state \\ []) do
-    {:once, %{handler_fn: handler_fn}}
+  def init([], _conn_state \\ []) do
+    {:once, %{}}
   end
 
   def onconnect(_ws_req, state) do
@@ -45,12 +44,8 @@ defmodule Steemex.WS do
   def websocket_handle({:text, msg}, _conn_state, state) do
     data = JSON.decode!(msg)
     id = data["id"]
-    {params, pid} = Steemex.IdAgent.get(id)
-    if pid do
-      send(pid, {:response, {id, params, data}})
-    else
-      state.handler_fn.(id, params, data)
-    end
+    {params, pid} = Steemex.IdStore.get(id)
+    send(pid, {:ws_response, {id, params, data}})
 
     {:ok, state}
   end
