@@ -18,9 +18,9 @@ defmodule Steemex.Handler do
     {:noreply, []}
   end
 
-  def handle_info({:ws_response, {id, msg, data}}, _) do
+  def handle_info(msga = {:ws_response, {id, msg, data}}, _) do
     Logger.debug("No known handler function for this message")
-    Logger.debug inspect(msg)
+    Logger.debug inspect(msga)
     {:noreply, []}
   end
 

@@ -7,6 +7,7 @@ defmodule SteemexTest do
     Steemex.IdStore.start_link
     url = Application.get_env(:steemex, :url)
     Steemex.WS.start_link(url)
+    Steemex.Handler.start_link
     %{
       params:
       %{

@@ -44,7 +44,7 @@ defmodule Steemex.WS do
   def websocket_handle({:text, msg}, _conn_state, state) do
     data = JSON.decode!(msg)
     id = data["id"]
-    {params, pid} = Steemex.IdStore.get(id)
+    {pid, params} = Steemex.IdStore.get(id)
     send(pid, {:ws_response, {id, params, data}})
 
     {:ok, state}

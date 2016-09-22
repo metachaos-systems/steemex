@@ -22,7 +22,7 @@ defmodule Steemex do
 
   def call(params, []) do
     id = gen_id()
-    IdStore.put(id, {params, self()})
+    IdStore.put(id, {self(), params})
 
     send_jsonrpc_call(id, params)
 
@@ -38,7 +38,7 @@ defmodule Steemex do
 
   def call(params, stream_to: pid) do
     id = gen_id()
-    IdStore.put(id, {params, pid})
+    IdStore.put(id, {pid, params})
     send_jsonrpc_call(id, params)
     id
   end

@@ -14,9 +14,9 @@ defmodule Steemex.IdStore do
     end)
   end
 
-  def put(id, params) do
+  def put(id, {pid, params}) do
     Agent.update(__MODULE__, fn map ->
-      Map.put(map, id, params)
+      Map.put(map, id, {pid, params})
     end)
   end
 
