@@ -18,14 +18,16 @@ defmodule Steemex do
     Supervisor.start_link(children, opts)
   end
 
-  def call(params) do
+  def call(params, opts \\ [])
+
+  def call(params, []) do
     id = gen_id()
     IdStore.put(id, {params, self()})
 
     send_jsonrpc_call(id, params)
 
     response = receive do
-      {:ws_response, {id, params, response}} -> response
+      {:ws_response, {_, _, response}} -> response
     end
 
     case response["error"] do
@@ -41,17 +43,17 @@ defmodule Steemex do
     id
   end
 
-  def get_block(height, opts) do
+  def get_block(height, opts \\ []) do
     Steemex.call [@db_api, "get_block", [height]], opts
   end
 
-  def get_content(author, permlink, opts) do
+  def get_content(author, permlink, opts \\ []) do
     Steemex.call [@db_api, "get_content", [author, permlink]], opts
   end
 
-  def get_accounts(accounts, opts) do
+  def get_accounts(accounts, opts \\ []) do
     accounts = List.wrap(accounts)
-    call([@db_api, "get_accounts", [accounts]]), opts
+    call([@db_api, "get_accounts", [accounts]], opts)
   end
 
 
