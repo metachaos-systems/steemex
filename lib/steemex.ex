@@ -41,17 +41,17 @@ defmodule Steemex do
     id
   end
 
-  def get_block(height) do
-    Steemex.call [@db_api, "get_block", [height]]
+  def get_block(height, opts) do
+    Steemex.call [@db_api, "get_block", [height]], opts
   end
 
-  def get_content(author, permlink) do
-    Steemex.call [@db_api, "get_content", [author, permlink]]
+  def get_content(author, permlink, opts) do
+    Steemex.call [@db_api, "get_content", [author, permlink]], opts
   end
 
-  def get_accounts(accounts) do
+  def get_accounts(accounts, opts) do
     accounts = List.wrap(accounts)
-    call([@db_api, "get_accounts", [accounts]])
+    call([@db_api, "get_accounts", [accounts]]), opts
   end
 
 
