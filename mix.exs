@@ -16,7 +16,7 @@
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
+    [applications: [:logger, :websocket_client],
     mod: {Steemex, []}]
   end
 
@@ -31,7 +31,7 @@
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:websocket_client, github: "sanmiguel/websocket_client" },
+      {:websocket_client, "~> 1.1.0"},
       {:poison, "~> 2.0"},
       {:credo, ">= 0.0.0", only: [:test, :dev]},
       {:ex_doc, ">= 0.0.0", only: :dev},
