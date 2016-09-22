@@ -1,8 +1,6 @@
 # Steemex
 
-Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is a supervised application with two workers and a configurable handler for handling responses to JSONRPC calls response.  
-
-Steemex is under active development.
+Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is a supervised application, so don't forget to add it to applications in mix.exs
 
 ## Installation
 
@@ -10,7 +8,7 @@ Steemex is under active development.
 
     ```elixir
     def deps do
-      [{:steemex, "~> 0.5.0"}]
+      [{:steemex, "~> 0.6.0"}]
     end
     ```
 
@@ -24,20 +22,18 @@ Steemex is under active development.
 ## Example
 
 First, configure a websockets url for the steemd instance, for example, `http://127.0.0.1:8090` to the config.
-Then, provide a handler module in the config file.
 
 ```elixir
 config :steemex,
-  url: "STEEM_URL",
-  handler: SteemexHandlerModule
+  url: "STEEM_URL"
 ```
 
-You can also use `Steemex.call_sync` that will block the calling process. Call_sync returns a success tuple with a JSONRPC endpoint response data.
+The most imporant module function is `Steemex.call`. It will block the calling process and return a success tuple with a "result" data from the JSONRPC call response. JSONRPC call ids are handled automatically.
 
-Example of SteemexHandlerModule. You need a handler module with a `handle_jsonrpc_call` callback. GenServer handler implementation is recommended as any advanced aggregation or analysis of blockchain data requires some state management.
+You can use a handler for async responses to JSONRPC calls by using `Steemex.call(params, stream_to: HandlerMod)`.  It returns JSONRPC call id and will send the msg to your handler module.
 
 ```elixir
-defmodule Steemex.Handler do
+defmodule Steemex.HandlerExample do
   use GenServer
   require Logger
 
@@ -46,36 +42,31 @@ defmodule Steemex.Handler do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def handle_jsonrpc_call(id, call_params, data) do
-    Logger.debug "Received jsonrpc call response"
-    GenServer.cast(__MODULE__, {id, call_params, data} )
-  end
-
   # SERVER
-  def handle_cast({id, ["database_api", "get_dynamic_global_properties", []], data}, _) do
+  def handle_info({:ws_response, {id, ["database_api", "get_dynamic_global_properties", []], data}}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
   end
 
-  def handle_cast({id, ["database_api", "get_state", params], data}, _) do
+  def handle_info({:ws_response, {id, ["database_api", "get_state", params], data}}, _) do
     Logger.debug inspect(data)
     {:noreply, []}
   end
 
-  def handle_cast({id, msg, data}, _) do
+  def handle_info({:ws_response, {id, msg, data}}, _) do
     Logger.debug("No known handler function for this message")
     Logger.debug inspect(msg)
     {:noreply, []}
   end
 
-end
-```
+end```
 
 ## Roadmap
 
-* Major refactoring
-* Investigate making blocking behaviour as a default
+Steemex is under active development.
+
 * Investigate using GenStage
 * Add more utility functions
 * Add more types and structs
-* More tests and docs
+* Add more tests and docs
+* Add transaction broadcast
