@@ -47,7 +47,7 @@
   defp package do
     [
      name: :steemex,
-     files: ["lib", "priv", "mix.exs", "README*", "LICENSE*"],
+     files: ["lib", "mix.exs", "README*", "LICENSE*"],
      maintainers: ["ontofractal"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/cyberpunk-ventures/steemex"}
