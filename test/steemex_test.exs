@@ -42,6 +42,12 @@ defmodule SteemexTest do
     assert %{"previous" => _, "transactions" => _} = data
   end
 
+  test "get_block handler" do
+    id = Steemex.get_block(3_141_592, stream_to: self())
+
+    assert_receive {:ws_response, {_, _, %{"result" => %{"previous" => _, "transactions" => _}}}}, 1_000
+  end
+
   test "get_accounts with multiple args" do
     {:ok, data} = Steemex.get_accounts(["dan", "ned"])
     assert %{"name" => _, "id" => _} = hd(data)
