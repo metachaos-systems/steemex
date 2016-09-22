@@ -60,12 +60,8 @@ defmodule Steemex do
   @doc """
   Sends an event to the WebSocket server
   """
-  def send_event(server_pid, msg) do
-    send server_pid, {:send, msg}
-  end
-
   defp send_jsonrpc_call(id, params) do
-    send_event Steemex.WS, %{jsonrpc: "2.0", id: id, params: params, method: "call"}
+    send Steemex.WS, {:send, %{jsonrpc: "2.0", id: id, params: params, method: "call"}}
   end
 
   defp gen_id do
