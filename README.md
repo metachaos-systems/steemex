@@ -59,7 +59,8 @@ defmodule Steemex.HandlerExample do
     {:noreply, []}
   end
 
-end```
+end
+```
 
 ## Roadmap
 
