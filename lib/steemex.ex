@@ -36,28 +36,22 @@ defmodule Steemex do
     end
   end
 
-  def call(params, stream_to: pid) do
-    id = gen_id()
-    IdStore.put(id, {pid, params})
-    send_jsonrpc_call(id, params)
-    id
+
+  def get_block(height) do
+    call [@db_api, "get_block", [height]]
   end
 
-  def get_block(height, opts \\ []) do
-    Steemex.call [@db_api, "get_block", [height]], opts
+  def get_content(author, permlink) do
+    call [@db_api, "get_content", [author, permlink]]
   end
 
-  def get_content(author, permlink, opts \\ []) do
-    Steemex.call [@db_api, "get_content", [author, permlink]], opts
-  end
-
-  def get_accounts(accounts, opts \\ []) do
+  def get_accounts(accounts) do
     accounts = List.wrap(accounts)
-    call([@db_api, "get_accounts", [accounts]], opts)
+    call([@db_api, "get_accounts", [accounts]])
   end
 
-  def get_block_header(height, opts \\ []) do
-    call([@db_api, "get_block_header", [height]], opts)
+  def get_block_header(height) do
+    call([@db_api, "get_block_header", [height]])
   end
 
   def get_dynamic_global_properties do
