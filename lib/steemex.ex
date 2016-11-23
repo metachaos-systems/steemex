@@ -60,6 +60,10 @@ defmodule Steemex do
     call([@db_api, "get_block_header", [height]], opts)
   end
 
+  def get_dynamic_global_properties do
+     call([@db_api, "get_dynamic_global_properties", []])
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """
