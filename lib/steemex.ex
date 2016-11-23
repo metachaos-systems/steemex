@@ -64,6 +64,10 @@ defmodule Steemex do
      call([@db_api, "get_dynamic_global_properties", []])
   end
 
+  def get_chain_properties do
+     call([@db_api, "get_chain_properties", []])
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """

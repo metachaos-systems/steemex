@@ -64,4 +64,9 @@ defmodule SteemexTest do
     assert %{"average_block_size" => _,"confidential_sbd_supply" => _} = data
   end
 
+  test "get_chain_properties" do
+    {:ok, data} = Steemex.get_chain_properties()
+    assert %{"account_creation_fee" => _, "maximum_block_size" => _} = data
+  end
+
 end
