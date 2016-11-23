@@ -74,4 +74,9 @@ defmodule SteemexTest do
     assert %{"current_median_history" => %{"base" => _}} = data
   end
 
+  test "get_current_median_history_price" do
+    {:ok, data} = Steemex.get_feed_history()
+    assert %{"current_median_history" => %{"base" => _}} = data
+  end
+
 end

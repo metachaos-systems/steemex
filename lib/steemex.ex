@@ -72,6 +72,10 @@ defmodule Steemex do
      call([@db_api, "get_feed_history", []])
   end
 
+  def get_current_median_history_price do
+      call([@db_api, "get_current_median_history_price", []])
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """
