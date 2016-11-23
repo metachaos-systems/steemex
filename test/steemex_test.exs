@@ -54,4 +54,9 @@ defmodule SteemexTest do
     assert %{"name" => _, "id" => _} = hd(data)
   end
 
+  test "get_block_header with multiple args" do
+    {:ok, data} = Steemex.get_block_header(1)
+    assert %{"timestamp" => "2016-03-24T16:05:00"} = data
+  end
+
 end

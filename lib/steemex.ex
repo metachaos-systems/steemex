@@ -56,6 +56,9 @@ defmodule Steemex do
     call([@db_api, "get_accounts", [accounts]], opts)
   end
 
+  def get_block_header(height, opts \\ []) do
+    call([@db_api, "get_block_header", [height]], opts)
+  end
 
   @doc """
   Sends an event to the WebSocket server
