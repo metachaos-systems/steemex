@@ -68,6 +68,10 @@ defmodule Steemex do
      call([@db_api, "get_chain_properties", []])
   end
 
+  def get_feed_history do
+     call([@db_api, "get_feed_history", []])
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """

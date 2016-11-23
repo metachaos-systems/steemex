@@ -69,4 +69,9 @@ defmodule SteemexTest do
     assert %{"account_creation_fee" => _, "maximum_block_size" => _} = data
   end
 
+  test "get_feed_history" do
+    {:ok, data} = Steemex.get_feed_history()
+    assert %{"current_median_history" => %{"base" => _}} = data
+  end
+
 end
