@@ -55,19 +55,19 @@ defmodule Steemex do
   end
 
   def get_dynamic_global_properties do
-     call([@db_api, "get_dynamic_global_properties", []])
+    call([@db_api, "get_dynamic_global_properties", []])
   end
 
   def get_chain_properties do
-     call([@db_api, "get_chain_properties", []])
+    call([@db_api, "get_chain_properties", []])
   end
 
   def get_feed_history do
-     call([@db_api, "get_feed_history", []])
+    call([@db_api, "get_feed_history", []])
   end
 
   def get_current_median_history_price do
-      call([@db_api, "get_current_median_history_price", []])
+    call([@db_api, "get_current_median_history_price", []])
   end
 
   @doc """
