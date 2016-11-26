@@ -31,7 +31,7 @@
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:websocket_client, "~> 1.1.0"},
+      {:websocket_client, "~> 1.2.0"},
       {:poison, "~> 2.0"},
       {:credo, ">= 0.0.0", only: [:test, :dev]},
       {:ex_doc, ">= 0.0.0", only: :dev},
