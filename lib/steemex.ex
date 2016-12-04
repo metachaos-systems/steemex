@@ -1,6 +1,17 @@
 defmodule Steemex do
   use Application
   alias Steemex.IdStore
+  defdelegate [
+    get_content(author, permlink),
+    get_block,
+    get_accounts(accounts),
+    get_block_header(height),
+    get_dynamic_global_properties,
+    get_chain_properties,
+    get_feed_history,
+    get_current_median_history_price
+  ], to: Steemex.DatabaseApi
+
   @db_api "database_api"
 
   def start(_type, _args) do
