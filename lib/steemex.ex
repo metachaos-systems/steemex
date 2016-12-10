@@ -12,6 +12,9 @@ defmodule Steemex do
     get_current_median_history_price
   ], to: Steemex.DatabaseApi
 
+  defdelegate get_account_count(), to: Steemex.DatabaseApi
+  defdelegate get_block(height), to: Steemex.DatabaseApi
+
   @db_api "database_api"
 
   def start(_type, _args) do

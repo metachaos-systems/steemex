@@ -37,6 +37,13 @@ defmodule Steemex.DatabaseApi do
     call("get_current_median_history_price", [])
   end
 
+  # ACCOUNTS
+  def get_account_count() do
+   call("get_account_count", [])
+  end
+
+
+  # UTILITY
   defp call_db(method, params) do
     call( method, params)
   end

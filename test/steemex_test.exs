@@ -68,4 +68,8 @@ defmodule SteemexTest do
     assert %{"current_median_history" => %{"base" => _}} = data
   end
 
+  test "get_account_count" do
+    {:ok, data} = Steemex.get_account_count()
+    assert 31415 < data
+  end
 end
