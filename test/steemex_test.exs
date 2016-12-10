@@ -70,7 +70,7 @@ defmodule SteemexTest do
 
   test "get_account_count" do
     {:ok, data} = Steemex.get_account_count()
-    assert 45454 = data
+    assert 31415 < data
   end
 
   test "lookup_accounts" do

@@ -43,7 +43,7 @@ defmodule Steemex.DatabaseApi do
   end
 
   def lookup_accounts(lower_bound_name, limit) do
-       call("lookup_accounts", [lower_bound_name,  limit])
+   call("lookup_accounts", [lower_bound_name,  limit])
   end
 
   def lookup_account_names(account_names) do
