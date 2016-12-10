@@ -70,6 +70,12 @@ defmodule SteemexTest do
 
   test "get_account_count" do
     {:ok, data} = Steemex.get_account_count()
-    assert 31415 < data
+    assert 45454 = data
+  end
+
+    test "lookup_accounts" do
+      {:ok, data} =  Steemex.lookup_accounts("steempunks", 10)
+      assert is_list(data)
+      assert is_bitstring(hd data)
   end
 end
