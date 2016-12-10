@@ -15,6 +15,7 @@ defmodule Steemex do
   defdelegate get_account_count(), to: Steemex.DatabaseApi
   defdelegate get_block(height), to: Steemex.DatabaseApi
   defdelegate lookup_accounts(lower_bound_name, limit), to: Steemex.DatabaseApi
+  defdelegate lookup_account_names(account_names), to: Steemex.DatabaseApi
 
   @db_api "database_api"
 

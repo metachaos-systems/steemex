@@ -73,9 +73,14 @@ defmodule SteemexTest do
     assert 45454 = data
   end
 
-    test "lookup_accounts" do
-      {:ok, data} =  Steemex.lookup_accounts("steempunks", 10)
-      assert is_list(data)
-      assert is_bitstring(hd data)
+  test "lookup_accounts" do
+    {:ok, data} =  Steemex.lookup_accounts("steempunks", 10)
+    assert is_list(data)
+    assert is_bitstring(hd data)
+  end
+
+  test "lookup_account_names" do
+    {:ok, data} =  Steemex.lookup_account_names(["ontofractal"])
+    assert %{"name" =>  "ontofractal"} = hd(data)
   end
 end
