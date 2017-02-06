@@ -17,8 +17,3 @@ erl_crash.dump
 *.ez
 
 *.beam
-
-dev.fish
-/data
-explore.exs
-derp.js

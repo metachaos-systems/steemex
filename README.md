@@ -8,7 +8,7 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
 
     ```elixir
     def deps do
-      [{:steemex, "~> 0.6.0"}]
+      [{:steemex, "~> 0.8.0"}]
     end
     ```
 
@@ -39,5 +39,4 @@ Steemex is under active development.
 * Investigate using GenStage
 * Add more utility functions
 * Add more types and structs
-* Add more tests and docs
 * Add transaction broadcast
