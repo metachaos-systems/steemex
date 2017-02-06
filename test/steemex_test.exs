@@ -60,17 +60,22 @@ defmodule SteemexTest do
 
   test "get_feed_history" do
     {:ok, data} = Steemex.get_feed_history()
-    IO.inspect data 
     assert %{"current_median_history" => %{"base" => _}} = data
   end
 
+  test "get_config" do
+    {:ok, data} = Steemex.get_config()
+    assert %{"VESTS_SYMBOL" => _} = data
+  end
+
   test "get_current_median_history_price" do
-    {:ok, data} = Steemex.get_feed_history()
-    assert %{"current_median_history" => %{"base" => _}} = data
+    {:ok, data} = Steemex.get_current_median_history_price()
+    assert  %{"base" => _, "quote" => _} = data
   end
 
   test "get_account_count" do
     {:ok, data} = Steemex.get_account_count()
+    IO.inspect data
     assert 31415 < data
   end
 
