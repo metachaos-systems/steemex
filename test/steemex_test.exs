@@ -34,7 +34,7 @@ defmodule SteemexTest do
 
   test "get_block" do
     {:ok, data} = Steemex.get_block(3_141_592)
-
+    
     assert %{"previous" => _, "transactions" => _} = data
   end
 
