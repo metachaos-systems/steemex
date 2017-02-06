@@ -55,12 +55,12 @@ defmodule SteemexTest do
 
   test "get_chain_properties" do
     {:ok, data} = Steemex.get_chain_properties()
-    IO.inspect data 
     assert %{"account_creation_fee" => _, "maximum_block_size" => _} = data
   end
 
   test "get_feed_history" do
     {:ok, data} = Steemex.get_feed_history()
+    IO.inspect data 
     assert %{"current_median_history" => %{"base" => _}} = data
   end
 

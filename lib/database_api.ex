@@ -209,6 +209,21 @@ defmodule Steemex.DatabaseApi do
     call("get_chain_properties", [])
   end
 
+  @doc"""
+  Returns feed history
+  Example response:
+  ```
+  %{"current_median_history" => %{"base" => "0.160 SBD",
+      "quote" => "1.010 STEEM"}, "id" => 0,
+    "price_history" => [%{"base" => "0.166 SBD", "quote" => "1.020 STEEM"},
+     %{"base" => "0.162 SBD", "quote" => "1.000 STEEM"},
+     %{"base" => "0.165 SBD", "quote" => "1.020 STEEM"},
+     %{"base" => "0.160 SBD", "quote" => "1.000 STEEM"},
+     %{"base" => "0.162 SBD", "quote" => "1.020 STEEM"},
+     %{"base" => "0.163 SBD", ...}, %{...}, ...]}
+  ```
+  """
+  @spec get_feed_history() :: map
   def get_feed_history do
     call("get_feed_history", [])
   end
