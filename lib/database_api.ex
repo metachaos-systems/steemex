@@ -305,6 +305,14 @@ defmodule Steemex.DatabaseApi do
     call("get_account_history", [name, from, limit])
   end
 
+  @doc"""
+  Lookup accounts
+  Example response:
+  ```
+  ["steempunks", "steempuns", "steempuppy", "steempuzzler", "steempy", "steemq", "steemq-blog", "steemq-funds", "steemq376q9", "steemquebec"]
+  ```
+  """
+  @spec lookup_accounts(String.t,integer) :: [String.t]
   def lookup_accounts(lower_bound_name, limit) do
     call("lookup_accounts", [lower_bound_name,  limit])
   end
