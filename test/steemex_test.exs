@@ -45,12 +45,12 @@ defmodule SteemexTest do
 
   test "get_block_header" do
     {:ok, data} = Steemex.get_block_header(1)
-    IO.inspect data 
     assert %{"timestamp" => "2016-03-24T16:05:00"} = data
   end
 
   test "get_dynamic_global_properties" do
     {:ok, data} = Steemex.get_dynamic_global_properties()
+    IO.inspect data 
     assert %{"average_block_size" => _,"confidential_sbd_supply" => _} = data
   end
 

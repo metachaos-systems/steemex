@@ -166,6 +166,32 @@ defmodule Steemex.DatabaseApi do
     call("get_block_header", [height])
   end
 
+  @doc"""
+  Unsurprisingly returns a map with dynamic global propeties.
+  Example response:
+
+  ```
+  %{"average_block_size" => 1128, "confidential_sbd_supply" => "0.000 SBD",
+    "confidential_supply" => "0.000 STEEM", "current_aslot" => 9185881,
+    "current_reserve_ratio" => 20000, "current_sbd_supply" => "1127800.928 SBD",
+    "current_supply" => "242006827.315 STEEM", "current_witness" => "blocktrades",
+    "head_block_id" => "008b5de5311d81de95d99b81d5d42399e029964f",
+    "head_block_number" => 9133541, "id" => 0,
+    "last_irreversible_block_num" => 9133517,
+    "max_virtual_bandwidth" => "5986734968066277376",
+    "maximum_block_size" => 65536, "num_pow_witnesses" => 172,
+    "participation_count" => 128,
+    "recent_slots_filled" => "340282366920938463463374607431768211455",
+    "sbd_interest_rate" => 300, "sbd_print_rate" => 7166,
+    "time" => "2017-02-06T14:54:03", "total_pow" => 437187,
+    "total_reward_fund_steem" => "57923.397 STEEM",
+    "total_reward_shares2" => "1214871589134524977954294837379",
+    "total_vesting_fund_steem" => "204618201.470 STEEM",
+    "total_vesting_shares" => "426476786270.109616 VESTS",
+    "virtual_supply" => "249126070.673 STEEM", "vote_regeneration_per_day" => 40}
+  ```
+  """
+  @spec get_dynamic_global_properties() :: map
   def get_dynamic_global_properties do
     call("get_dynamic_global_properties", [])
   end
