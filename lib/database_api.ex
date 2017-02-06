@@ -317,6 +317,52 @@ defmodule Steemex.DatabaseApi do
     call("lookup_accounts", [lower_bound_name,  limit])
   end
 
+  @doc"""
+  Returns list of maps of account data.
+
+  Example response:
+  ```
+  [%{"recovery_account" => "steem", "posting_rewards" => 4950108,
+     "created" => "2016-08-06T17:34:18",
+     "last_bandwidth_update" => "2017-01-31T13:03:36",
+     "to_withdraw" => "5188624789449",
+     "last_active_proved" => "1970-01-01T00:00:00", "withdraw_routes" => 0,
+     "last_account_update" => "2016-12-03T12:59:33",
+     "sbd_last_interest_payment" => "2017-01-18T22:18:36",
+     "json_metadata" => "{\"profile\":{\"profile_image\":\"https://upload.wikimedia.org/wikipedia/commons/8/81/Buddhabrot-1000I-8000.jpg\",\"name\":\"ontofractal\",\"website\":\"http://twitter.com/ontofractal\"}}",
+     "active_challenged" => false, "new_average_bandwidth" => "8259705539",
+     "last_vote_time" => "2017-01-31T13:03:36", "id" => 48156,
+     "vesting_shares" => "5012094.675002 VESTS", "reset_account" => "null",
+     "sbd_balance" => "8.253 SBD", "last_post" => "2017-01-28T14:53:06",
+     "lifetime_vote_count" => 0,
+     "savings_sbd_last_interest_payment" => "1970-01-01T00:00:00",
+     "mined" => false, "owner_challenged" => false,
+     "vesting_withdraw_rate" => "399124.983803 VESTS",
+     "active" => %{"account_auths" => [],
+       "key_auths" => [["STM8NV2JNwtcTSCDSJDgr69PFueGTvnvGC2F8HPSyUxFWrnp9ATY6",
+         1]], "weight_threshold" => 1}, "proxy" => "",
+     "posting" => %{"account_auths" => [],
+       "key_auths" => [["STM6qg3gEEkSz4i1T9WpjSxjFrVc6fNEps1QpvxsDCMATiaL5aRzx",
+         1]], "weight_threshold" => 1}, "last_root_post" => "2017-01-28T13:54:48",
+     "savings_balance" => "0.000 STEEM", "average_bandwidth" => 369651031,
+     "last_account_recovery" => "1970-01-01T00:00:00",
+     "next_vesting_withdrawal" => "2017-02-11T16:44:30", "can_vote" => true,
+     "owner" => %{"account_auths" => [],
+       "key_auths" => [["STM6Ms4HrGMCPsq3yoytJc8TEKuQb1Bk9HRxjUSa3wtyhnpA4fJZV",
+         1]], "weight_threshold" => 1}, "post_count" => 240,
+     "last_owner_proved" => "1970-01-01T00:00:00",
+     "sbd_seconds_last_update" => "2017-02-03T19:08:00",
+     "memo_key" => "STM5frWAw3yukawhSEnQ7zK7N1LWM77JzjJvzAZx5JRMgPkoddXTv",
+     "new_average_market_bandwidth" => 2748776576, "name" => "ontofractal",
+     "withdrawn" => "1197374951409", "savings_withdraw_requests" => 0,
+     "savings_sbd_seconds" => "0", "last_owner_update" => "1970-01-01T00:00:00",
+     "proxied_vsf_votes" => [0, 0, 0, 0, 0, 0, ...],
+     "sbd_seconds" => "5772530808", "savings_sbd_balance" => "0.000 SBD",
+     "post_bandwidth" => 10000, "curation_rewards" => 1713,
+     "witnesses_voted_for" => 1, "comment_count" => 0, ...}]
+  ```
+  """
+  @spec lookup_account_names([String.t]) :: [map]
   def lookup_account_names(account_names) do
     call("lookup_account_names", [account_names])
   end
