@@ -101,8 +101,12 @@ defmodule SteemexTest do
 
   test "get_hardfork_version" do
     {:ok, data} = Steemex.get_hardfork_version()
-    IO.inspect data
     assert "0" <> minor_ver  = data
+  end
+
+  test "get_next_scheduled_hardfork" do
+    {:ok, data} = Steemex.get_next_scheduled_hardfork()
+    assert %{"hf_version" => _, "live_time" => _}  = data
   end
 
 end
