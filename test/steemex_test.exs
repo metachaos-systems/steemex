@@ -96,8 +96,13 @@ defmodule SteemexTest do
 
   test "get_witness_schedule" do
     {:ok, data} = Steemex.get_witness_schedule()
-    IO.inspect data
     assert %{"current_shuffled_witnesses" => _} = data
+  end
+
+  test "get_hardfork_version" do
+    {:ok, data} = Steemex.get_hardfork_version()
+    IO.inspect data
+    assert "0" <> minor_ver  = data
   end
 
 end

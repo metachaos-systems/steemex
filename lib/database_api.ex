@@ -414,6 +414,18 @@ defmodule Steemex.DatabaseApi do
    call("get_witness_schedule", [])
   end
 
+
+  @doc"""
+  Gets hardfork version
+
+  Example response: `"0.16.0"`
+  """
+  @spec get_hardfork_version() :: String.t
+  def get_hardfork_version() do
+   call("get_hardfork_version", [])
+  end
+
+
   # UTILITY
   defp call_db(method, params) do
     call( method, params)
