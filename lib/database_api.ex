@@ -301,6 +301,33 @@ defmodule Steemex.DatabaseApi do
     call("get_account_count", [])
   end
 
+  @doc"""
+  Returns account operations history
+  Example response:
+  ```
+  [[15294,
+    %{"block" => 8903687,
+      "op" => ["author_reward",
+       %{"author" => "ontofractal",
+         "permlink" => "comparison-of-golos-and-steem-statistics-for-first-100-days",
+         "sbd_payout" => "7.770 SBD", "steem_payout" => "33.782 STEEM",
+         "vesting_payout" => "180601.344672 VESTS"}], "op_in_trx" => 1,
+      "timestamp" => "2017-01-29T15:09:45",
+      "trx_id" => "0000000000000000000000000000000000000000", "trx_in_block" => 6,
+      "virtual_op" => 0}],
+   [15295,
+    %{"block" => 8904511,
+      "op" => ["vote",
+       %{"author" => "ontofractal",
+         "permlink" => "comparison-of-golos-and-steem-statistics-for-first-100-days",
+         "voter" => "hipster", "weight" => 10000}], "op_in_trx" => 0,
+      "timestamp" => "2017-01-29T15:50:57",
+      "trx_id" => "83615aab4f2ff416ac178bcb3bab50ffbe585745", "trx_in_block" => 1,
+      "virtual_op" => 0}],
+      ...]
+  ```
+  """
+  @spec get_account_history(String.t, integer, integer) :: [map]
   def get_account_history(name, from, limit) do
     call("get_account_history", [name, from, limit])
   end

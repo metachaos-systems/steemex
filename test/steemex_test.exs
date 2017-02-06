@@ -86,12 +86,12 @@ defmodule SteemexTest do
 
   test "lookup_account_names" do
     {:ok, data} = Steemex.lookup_account_names(["ontofractal"])
-    IO.inspect data
     assert %{"name" =>  "ontofractal"} = hd(data)
   end
 
   test "get_account_history" do
     {:ok, data} = Steemex.get_account_history("ontofractal", -1, 10)
+    IO.inspect data
     assert [_, %{"block" => _}] = hd(data)
   end
 end
