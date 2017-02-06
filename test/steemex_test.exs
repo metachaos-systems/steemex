@@ -91,7 +91,13 @@ defmodule SteemexTest do
 
   test "get_account_history" do
     {:ok, data} = Steemex.get_account_history("ontofractal", -1, 10)
-    IO.inspect data
     assert [_, %{"block" => _}] = hd(data)
   end
+
+  test "get_witness_schedule" do
+    {:ok, data} = Steemex.get_witness_schedule()
+    IO.inspect data
+    assert %{"current_shuffled_witnesses" => _} = data
+  end
+
 end
