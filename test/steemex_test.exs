@@ -34,12 +34,13 @@ defmodule SteemexTest do
 
   test "get_block" do
     {:ok, data} = Steemex.get_block(3_141_592)
-    
+
     assert %{"previous" => _, "transactions" => _} = data
   end
 
   test "get_accounts with multiple args" do
     {:ok, data} = Steemex.get_accounts(["dan", "ned"])
+  
     assert %{"name" => _, "id" => _} = hd(data)
   end
 

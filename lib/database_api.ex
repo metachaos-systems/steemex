@@ -62,8 +62,91 @@ defmodule Steemex.DatabaseApi do
     call("get_content", [author, permlink])
   end
 
+  @doc"""
+  Returns account data. Accepts a list of up to 1000 account names
+
+  Example response:
+  ```
+  [%{"recovery_account" => "steem", "guest_bloggers" => [],
+     "posting_rewards" => 44618927, "created" => "2016-03-31T14:21:39",
+     "last_bandwidth_update" => "2017-02-06T03:22:39", "to_withdraw" => 0,
+     "last_active_proved" => "1970-01-01T00:00:00", "tags_usage" => [],
+     "withdraw_routes" => 0, "last_account_update" => "2016-07-15T19:27:51",
+     "sbd_last_interest_payment" => "2017-01-14T21:31:33", "json_metadata" => "",
+     "active_challenged" => false, "new_average_bandwidth" => "6733326000",
+     "vesting_balance" => "0.000 STEEM",
+     "last_vote_time" => "2017-02-06T03:22:39", "post_history" => [],
+     "blog_category" => %{}, "market_history" => [], "id" => 496,
+     "vesting_shares" => "9835900508.693966 VESTS", "vote_history" => [],
+     "reset_account" => "null", "sbd_balance" => "50.626 SBD",
+     "last_post" => "2017-01-31T23:59:21", "lifetime_vote_count" => 0,
+     "savings_sbd_last_interest_payment" => "1970-01-01T00:00:00",
+     "mined" => false, "owner_challenged" => false,
+     "vesting_withdraw_rate" => "0.000000 VESTS",
+     "active" => %{"account_auths" => [],
+       "key_auths" => [["STM7YtQZ7fwg7VE2U7wUPwdL2hWwtd3zR45XSPTk5dTirk7Mxud5z",
+         1], ["STM7sw22HqsXbz7D2CmJfmMwt9rimtk518dRzsR1f8Cgw52dQR1pR", 1]],
+       "weight_threshold" => 1}, "proxy" => "",
+     "posting" => %{"account_auths" => [],
+       "key_auths" => [["STM4yfYEjUoey4PLrKhnKFo1XKQZtZ77fWLnbGTr2mAUaSt2Sx9W4",
+         1], ["STM7sw22HqsXbz7D2CmJfmMwt9rimtk518dRzsR1f8Cgw52dQR1pR", 1]],
+       "weight_threshold" => 1}, "last_root_post" => "2016-07-27T15:44:03",
+     "savings_balance" => "0.000 STEEM", "average_bandwidth" => 182717207,
+     "last_account_recovery" => "1970-01-01T00:00:00",
+     "next_vesting_withdrawal" => "1969-12-31T23:59:59", "can_vote" => true,
+     "owner" => %{"account_auths" => [],
+       "key_auths" => [["STM7H7yZfed2GqkgdLuYy3VVrmQLV4htbiu1WGouRHsjjD4Kq1MvQ",
+         1], ["STM7sw22HqsXbz7D2CmJfmMwt9rimtk518dRzsR1f8Cgw52dQR1pR", 1]],
+       "weight_threshold" => 1},
+     "witness_votes" => ["abit", "arhag", "au1nethyb1", "bhuz", "bitcube",
+      "blocktrades", "boatymcboatface", "charlieshrem", ...],
+     "reputation" => "50203479326220", "post_count" => 236,
+     "last_owner_proved" => "1970-01-01T00:00:00",
+     "sbd_seconds_last_update" => "2017-01-21T09:27:12",
+     "memo_key" => "STM7qtpUZfaHwyJk9ZwvXH3EsAxJcYWY4913Vj6xVWkskM8SRV2Ub",
+     "new_average_market_bandwidth" => 2003955853, "name" => "dan",
+     "withdrawn" => 0, ...},
+   %{"recovery_account" => "steem", "guest_bloggers" => [],
+     "posting_rewards" => 7480629, "created" => "2016-03-31T14:21:45",
+     "last_bandwidth_update" => "2017-02-06T14:06:06", "to_withdraw" => 0,
+     "last_active_proved" => "1970-01-01T00:00:00", "tags_usage" => [],
+     "withdraw_routes" => 0, "last_account_update" => "2017-01-18T20:09:33",
+     "sbd_last_interest_payment" => "2017-01-04T19:19:27",
+     "json_metadata" => "{\"profile\":{\"profile_image\":\"https://pbs.twimg.com/profile_images/788308793675382784/qeMigCcx.jpg\",\"about\":\"Building on the Steem blockchain. CEO @steemit\",\"location\":\"A vision in  a dream.\",\"name\":\"ned\"}}",
+     "active_challenged" => false, "new_average_bandwidth" => "170721511985",
+     "vesting_balance" => "0.000 STEEM",
+     "last_vote_time" => "2017-02-06T14:06:06", "post_history" => [],
+     "blog_category" => %{}, "market_history" => [], "id" => 497,
+     "vesting_shares" => "11920950909.517074 VESTS", "vote_history" => [],
+     "reset_account" => "null", "sbd_balance" => "1004.474 SBD",
+     "last_post" => "2017-02-03T21:32:42", "lifetime_vote_count" => 0,
+     "savings_sbd_last_interest_payment" => "2017-01-01T19:19:27",
+     "mined" => false, "owner_challenged" => false,
+     "vesting_withdraw_rate" => "0.000000 VESTS",
+     "active" => %{"account_auths" => [],
+       "key_auths" => [["STM6NtAaJVX8Bk85jiphbrDk7swJRFdGGsqCuQtmajDvLFa6aXXjo",
+         1]], "weight_threshold" => 1}, "proxy" => "",
+     "posting" => %{"account_auths" => [],
+       "key_auths" => [["STM6DXAK93uhbvAGKQaSGJG8QGCDyXxbS3GFFMHzqFw743XuUKUn7",
+         1]], "weight_threshold" => 1}, "last_root_post" => "2017-01-29T05:46:57",
+     "savings_balance" => "45555.000 STEEM", "average_bandwidth" => 148515414,
+     "last_account_recovery" => "1970-01-01T00:00:00",
+     "next_vesting_withdrawal" => "1969-12-31T23:59:59", "can_vote" => true,
+     "owner" => %{"account_auths" => [],
+       "key_auths" => [["STM88VeCav3dFi82QRfojbHjB78H7sj9e8SaymGg5gYw6nvzwgKy8",
+         1]], "weight_threshold" => 1},
+     "witness_votes" => ["aizensou", "anyx", "bacchist", "bitcoiner",
+      "busy.witness", "chainsquad.com", "charlieshrem", "dragosroua", ...],
+     "reputation" => "23004921512286", "post_count" => 449,
+     "last_owner_proved" => "1970-01-01T00:00:00",
+     "sbd_seconds_last_update" => "2017-01-30T15:32:00",
+     "memo_key" => "STM5Wq24M2wbU9TJgcG9BLVtjVSmeQNX4hnivRBEubFHya5UrqUEH",
+     "new_average_market_bandwidth" => "5789473524", "name" => "ned",
+     "withdrawn" => 0, ...}]
+  ```
+  """
+  @spec get_accounts([String.t]) :: [map]
   def get_accounts(accounts) do
-    accounts = List.wrap(accounts)
     call("get_accounts", [accounts])
   end
 
