@@ -150,6 +150,18 @@ defmodule Steemex.DatabaseApi do
     call("get_accounts", [accounts])
   end
 
+  @doc"""
+  Returns block header data. Accepts block height.
+
+  Example response:
+  ```
+  %{"extensions" => [], "previous" => "0000000000000000000000000000000000000000",
+    "timestamp" => "2016-03-24T16:05:00",
+    "transaction_merkle_root" => "0000000000000000000000000000000000000000",
+    "witness" => "initminer"}
+  ```
+  """
+  @spec get_block_header(pos_integer) :: map
   def get_block_header(height) do
     call("get_block_header", [height])
   end

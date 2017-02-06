@@ -40,12 +40,12 @@ defmodule SteemexTest do
 
   test "get_accounts with multiple args" do
     {:ok, data} = Steemex.get_accounts(["dan", "ned"])
-  
     assert %{"name" => _, "id" => _} = hd(data)
   end
 
   test "get_block_header" do
     {:ok, data} = Steemex.get_block_header(1)
+    IO.inspect data 
     assert %{"timestamp" => "2016-03-24T16:05:00"} = data
   end
 
