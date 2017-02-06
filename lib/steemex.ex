@@ -1,17 +1,18 @@
 defmodule Steemex do
   use Application
   alias Steemex.IdStore
-  defdelegate [
-    get_content(author, permlink),
-    get_block,
-    get_accounts(accounts),
-    get_block_header(height),
-    get_dynamic_global_properties,
-    get_chain_properties,
-    get_feed_history,
-    get_current_median_history_price
-  ], to: Steemex.DatabaseApi
 
+  defdelegate get_current_median_history_price(), to: Steemex.DatabaseApi
+  defdelegate get_feed_history(), to: Steemex.DatabaseApi
+  defdelegate get_chain_properties(), to: Steemex.DatabaseApi
+  defdelegate get_dynamic_global_properties(), to: Steemex.DatabaseApi
+  defdelegate get_block_header(height), to: Steemex.DatabaseApi
+  defdelegate get_accounts(accounts), to: Steemex.DatabaseApi
+  defdelegate get_content(author, permlink), to: Steemex.DatabaseApi
+  defdelegate get_witness_schedule(), to: Steemex.DatabaseApi
+  defdelegate get_config(), to: Steemex.DatabaseApi
+  defdelegate get_next_scheduled_hardfork(), to: Steemex.DatabaseApi
+  defdelegate get_hardfork_version(), to: Steemex.DatabaseApi
   defdelegate get_account_count(), to: Steemex.DatabaseApi
   defdelegate get_block(height), to: Steemex.DatabaseApi
   defdelegate lookup_accounts(lower_bound_name, limit), to: Steemex.DatabaseApi
