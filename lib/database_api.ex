@@ -196,6 +196,15 @@ defmodule Steemex.DatabaseApi do
     call("get_dynamic_global_properties", [])
   end
 
+  @doc"""
+  Unsurprisingly returns a map with chain propeties.
+  Example result:
+  ```
+  %{"account_creation_fee" => "30.000 STEEM", "maximum_block_size" => 65536,
+    "sbd_interest_rate" => 300}
+  ```
+  """
+  @spec get_chain_properties() :: map
   def get_chain_properties do
     call("get_chain_properties", [])
   end

@@ -50,12 +50,12 @@ defmodule SteemexTest do
 
   test "get_dynamic_global_properties" do
     {:ok, data} = Steemex.get_dynamic_global_properties()
-    IO.inspect data 
     assert %{"average_block_size" => _,"confidential_sbd_supply" => _} = data
   end
 
   test "get_chain_properties" do
     {:ok, data} = Steemex.get_chain_properties()
+    IO.inspect data 
     assert %{"account_creation_fee" => _, "maximum_block_size" => _} = data
   end
 
