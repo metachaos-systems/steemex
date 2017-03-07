@@ -72,7 +72,7 @@ defmodule Steemex.Streamer do
       "limit_order_cancel" -> LimitOrderCancel
       "comment_options" -> CommentOptions
       _ ->
-        Logger.info("ExGolos Streamer encountered unknown op_type: #{op_type}")
+        Logger.info("Steemex.Streamer encountered unknown op_type: #{op_type}")
         nil
     end
   end
