@@ -29,9 +29,9 @@ config :steemex,
   stream_to: YourOpHandlerModule
 ```
 
-Warning: Steemex.Streamer GenServer is started by the Steemex app if `stream_to` key is present in the config. Name of the `YourOpHandlerModule` GenServer module should be registered and the streaming recipient process should be alive.
+Warning: `Steemex.Streamer` GenServer is started by the Steemex app if `stream_to` key is present in the config. Name of the `YourOpHandlerModule` GenServer module should be registered and the streaming recipient process should be alive.
 
-Alternatively, you can launch streamer module manually, like this: `Golos.Streamer.start_link(%{stream_to: YourOpHandlerModule})`
+Alternatively, you can launch streamer module manually, like this: `Steemex.Streamer.start_link(%{stream_to: YourOpHandlerModule})`
 
 Steemex module contains structs for all operations types. Streamer module parses each operation and converts it to a correspondning. struct.
 
