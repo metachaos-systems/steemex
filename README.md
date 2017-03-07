@@ -73,7 +73,7 @@ defmodule Steemex.OpsHandlerExample do
 
 
   def handle_info({op_type, op_data}, state) do
-    Logger.info("Новая операция #{op_type}:  #{inspect(op_data)}" )
+    Logger.info("New operation #{op_type}:  #{inspect(op_data)}" )
     {:noreply, state}
   end
 

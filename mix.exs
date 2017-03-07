@@ -41,7 +41,7 @@
 
   defp description do
     """
-    Elixir websockets library and utilities for Steem blockchain client
+    Elixir websockets library, operation streaming and utilities for Steem blockchain
     """
   end
 
