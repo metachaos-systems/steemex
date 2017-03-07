@@ -85,7 +85,6 @@ end
 
 Steemex is under active development.
 
-* Implement subscriptions
 * Investigate using GenStage
 * Add more utility functions
 * Add more types and structs
