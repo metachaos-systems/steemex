@@ -33,6 +33,7 @@
     [
       {:websocket_client, "~> 1.2.0"},
       {:poison, "~> 2.0"},
+      {:atomic_map, ">= 0.0.0"},
       {:credo, ">= 0.0.0", only: [:test, :dev]},
       {:ex_doc, ">= 0.0.0", only: :dev},
     ]
