@@ -39,10 +39,10 @@ defmodule Steemex.Streamer do
 
   def convert_to_tuple(op = [op_type, op_data]) do
     parse_json_strings = fn x, key ->
-      val = x[key]
-      case val do
-         nil -> x
-         _ -> put_in(x, [key], Poison.Parser.parse!(val))
+      val = x[key] || "{}"
+      case Poison.Parser.parse(val) do
+         {:ok, map} -> put_in(x, [key], map)
+         {:error, _} -> %{}
       end
     end
     op_data = op_data
