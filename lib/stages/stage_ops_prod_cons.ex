@@ -1,0 +1,67 @@
+defmodule Steemex.Stage.Ops.ProducerConsumer do
+  use GenStage
+  require Logger
+
+  def start_link(args, options) do
+    GenStage.start_link(__MODULE__, args, options)
+  end
+
+  def init(state) do
+    {:producer_consumer, state, subscribe_to: state.subscribe_to, dispatcher: GenStage.BroadcastDispatcher}
+  end
+
+  def handle_events(events, _from, number) do
+    events = for block <- events, do: unpack_and_convert_operations(block)
+    {:noreply, events, number}
+  end
+
+  def unpack_and_convert_operations(block) do
+     for tx <- block["transactions"] do
+      for op <- tx["operations"] do
+        convert_to_tuple(op)
+      end
+     end
+     |> List.flatten
+  end
+
+  def convert_to_tuple(op = [op_type, op_data]) do
+    parse_json_strings = fn x, key ->
+      val = x[key] || "{}"
+      case Poison.Parser.parse(val) do
+         {:ok, map} -> put_in(x, [key], map)
+         {:error, _} -> %{}
+      end
+    end
+    op_data = op_data
+      |> AtomicMap.convert(safe: false)
+      |> parse_json_strings.(:json)
+      |> parse_json_strings.(:json_metadata)
+
+    op_struct = select_struct(op_type)
+    op_data = if op_struct, do: struct(op_struct,op_data), else: op_data
+    {String.to_atom(op_type), op_data}
+  end
+
+
+  def select_struct(op_type) do
+    alias Steemex.Ops.{Comment, Vote, CustomJson, POW2, CommentOptions,
+      FeedPublish, Transfer, AccountCreate,TransferToVesting, LimitOrderCreate, LimitOrderCancel}
+    case op_type do
+      "comment" -> Comment
+      "vote" -> Vote
+      "custom_json" -> CustomJson
+      "pow2" -> POW2
+      "feed_publish" -> FeedPublish
+      "transfer" -> Transfer
+      "account_create" -> AccountCreate
+      "transfer_to_vesting" -> TransferToVesting
+      "limit_order_create" -> LimitOrderCreate
+      "limit_order_cancel" -> LimitOrderCancel
+      "comment_options" -> CommentOptions
+      _ ->
+        Logger.info("ExGolos Ops ProducerConsumer encountered unknown op_type: #{op_type}")
+        nil
+    end
+  end
+
+end
