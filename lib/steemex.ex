@@ -40,7 +40,7 @@ defmodule Steemex do
   defdelegate get_active_votes(author, permlink), to: Steemex.DatabaseApi
   defdelegate get_followers(account, start_follower, follow_type, limit), to: Steemex.DatabaseApi
   defdelegate get_following(account, start_following, follow_type, limit), to: Steemex.DatabaseApi
-  
+
   @db_api "database_api"
 
   def start(_type, _args) do
@@ -53,6 +53,7 @@ defmodule Steemex do
     children = [
       worker(IdStore, []),
       worker(Steemex.WS, [url])
+      supervisor(Golos.ProducerSupervisor, []),
     ]
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
     Supervisor.start_link(children, opts)
