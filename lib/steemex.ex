@@ -77,8 +77,6 @@ defmodule Steemex do
     end
   end
 
-
-
   @doc """
   Sends an event to the WebSocket server
   """
