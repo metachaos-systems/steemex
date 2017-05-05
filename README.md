@@ -1,6 +1,6 @@
 # Steemex
 
-Elixir websockets client for steemd. Provides an interface to Steem JSONRPC protocol. Steemex is a supervised application, so don't forget to add it to applications in mix.exs
+Elixir websockets client for Steem JSONRPC interface. Steemex is a supervised application, so don't forget to add it to applications in mix.exs
 
 ## Installation
 
@@ -8,7 +8,9 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
 
     ```elixir
     def deps do
-      [{:steemex, "~> 0.9.0"}]
+      [
+        {:steemex, ">= 0.0.0"}
+      ]
     end
     ```
 
@@ -21,62 +23,57 @@ Elixir websockets client for steemd. Provides an interface to Steem JSONRPC prot
 
 ## Configuration
 
-First, configure a websockets url for the steemd instance, for example, a public node `wss://steemd.steemit.com/` to the config. If you'd like to use a Streamer module, add a `stream_to` option.
+First, configure a websockets url for the steemd instance, for example, a public node `wss://steemd.steemit.com/` to the config.
 
 ```elixir
 config :steemex,
   url: System.get_env("STEEM_URL"),
-  stream_to: YourOpHandlerModule
 ```
 
-Warning: `Steemex.Streamer` GenServer is started by the Steemex app if `stream_to` key is present in the config. Name of the `YourOpHandlerModule` GenServer module should be registered and the streaming recipient process should be alive.
-
-Alternatively, you can launch streamer module manually, like this: `Steemex.Streamer.start_link(%{stream_to: YourOpHandlerModule})`
-
-Steemex module contains structs for all operations types. Streamer module parses each operation and converts it to a correspondning. struct.
+Steemex module includes structs for all operations types. Streamer module parses each operation and converts it to a corresponding struct.
 
 # JSONRPC API
 
-The most imporant module function is `Steemex.call`. It will block the calling process and return a success tuple with a "result" data from the JSONRPC call response. JSONRPC call ids are handled automatically.
+The main module function is `Steemex.call`. It will block the calling process and return a success tuple with a "result" data from the JSONRPC call response. JSONRPC call ids are handled automatically.
 
 # Documentation
 
 All database api functions have docs, typespecs and example API responses. Most example responses are from the Golos blockchain, their shape is identical to Steem counterparts.
 
-# Example of an operation stream handler module
+# GenStage
+
+ExGolos uses GenStage, [a new specification](http://elixir-lang.org/blog/2016/07/14/announcing-genstage/) for handling and exchanging events among Elixir/Erlang processes.
+
+On module app startup two GenStage processes are started and registered:
+
+* Golos.Stage.Blocks.Producer which, perhaps unsurprisingly, is a new blocks producer
+* Golos.Stage.Ops.ProducerConsumer consumes blocks and produces operations
+
+
+## An example of GenStage consumer to handle stream of new operations
 
 ```
-defmodule Steemex.OpsHandlerExample do
-  use GenServer
+defmodule Steemex.Stage.Ops.ExampleConsumer do
+  use GenStage
   require Logger
 
-  @doc"""
-  Starts the handler module
-  """
-  def start_link do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+  def start_link(args, options \\ []) do
+    GenStage.start_link(__MODULE__, args, options)
   end
 
-  def init(config \\ %{}) do
-    {:ok, config}
+  def init(state) do
+    {:consumer, state, subscribe_to: state.subscribe_to}
   end
 
-  def handle_info({:comment, data}, state) do
-    Logger.info("New post or comment:  #{inspect(data)}" )
-    {:noreply, state}
+  def handle_events(events, _from, state) do
+    for op <- events do
+      Logger.info """
+      New operation:
+      #{inspect op}
+      """
+    end
+    {:noreply, [], state}
   end
-
-  def handle_info({:vote, data}, state) do
-    Logger.info("New vote:  #{inspect(data)}" )
-    {:noreply, state}
-  end
-
-
-  def handle_info({op_type, op_data}, state) do
-    Logger.info("New operation #{op_type}:  #{inspect(op_data)}" )
-    {:noreply, state}
-  end
-
 
 end
 ```
@@ -85,7 +82,7 @@ end
 
 Steemex is under active development.
 
-* Investigate using GenStage
+* ~~Investigate using GenStage~~
 * Add more utility functions
 * Add more types and structs
-* Add transaction broadcast
+* Add transaction broadcasting
