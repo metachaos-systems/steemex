@@ -53,7 +53,7 @@ defmodule Steemex do
     children = [
       worker(IdStore, []),
       worker(Steemex.WS, [url]),
-      supervisor(Steemex.ProducerSupervisor, []),
+      supervisor(Steemex.Stage.Supervisor, []),
     ]
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
     Supervisor.start_link(children, opts)
