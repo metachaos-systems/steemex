@@ -2,7 +2,7 @@ defmodule Steemex.Stage.Supervisor do
   use Supervisor
 
   def start_link do
-    Supervisor.start_link(__MODULE__, :ok, name: :steem_producer_sup)
+    Supervisor.start_link(__MODULE__, :ok, name: Steemex.Stage.Supervisor)
   end
 
   def init(:ok) do
