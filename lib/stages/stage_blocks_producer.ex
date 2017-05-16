@@ -24,8 +24,13 @@ defmodule Steemex.Stage.Blocks.Producer do
       {:noreply, [], state}
     else
       {:ok, block} = Steemex.get_block(height)
-      block = put_in(block, ["height"], height)
-      {:noreply, [block], put_in(state, [:previous_height], height)}
+      if block do
+        block = put_in(block, ["height"])
+        state = put_in(state, [:previous_height], height)
+        {:noreply, [block], state}
+      else
+        {:noreply, [], state}
+      end
     end
   end
 end
