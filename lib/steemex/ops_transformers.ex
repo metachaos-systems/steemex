@@ -1,14 +1,14 @@
 defmodule Steemex.Ops.Transform do
   alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson, FeedPublish}
+  alias Steemex.StructuredOps
 
   def prepare_for_db(%Transfer{} = op) do
-    parsed = %{token: _, amount: _} =
-      op.amount
-      |> parse_steemlike_token_amount()
+    parsed = parse_steemlike_token_amount(op.amount)
 
-    op
+    op = op
       |> Map.delete(:__struct__)
       |> Map.merge(parsed)
+    struct(StructuredOps.Transfer, op)
   end
 
   def prepare_for_db(%Comment{} = op) do
