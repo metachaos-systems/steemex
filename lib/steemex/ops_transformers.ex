@@ -1,5 +1,5 @@
 defmodule Steemex.Ops.Transform do
-  alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson}
+  alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson, FeedPublish}
 
   def prepare_for_db(%Transfer{} = op) do
     parsed = %{token: _, amount: _} =
@@ -32,6 +32,17 @@ defmodule Steemex.Ops.Transform do
       |> Map.merge(parsed)
   end
 
+
+  def prepare_for_db(%FeedPublish{exchange_rate: %{base: base, quote: quote}} = op) do
+    base = base |> parse_steemlike_token_amount()
+    quote = quote |> parse_steemlike_token_amount()
+
+    op
+      |> Map.from_struct
+      |> Map.delete(:exchange_rate)
+      |> Map.merge(%{base_amount: base.amount, base_token: base.token })
+      |> Map.merge(%{quote_amount: quote.amount, quote_token: quote.token})
+  end
 
   def prepare_for_db(%CustomJson{json: json} = op) when is_binary(json) do
     prepare_for_db(%{op | json: Poison.Parser.parse!(json)})
