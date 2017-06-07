@@ -7,7 +7,7 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
   end
 
   def init(state) do
-    {:producer_consumer, state, subscribe_to: state.subscribe_to, dispatcher: GenStage.BroadcastDispatcher}
+    {:producer_consumer, state, subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
   end
 
   def handle_events(events, _from, number) do
@@ -59,7 +59,7 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
       "limit_order_cancel" -> LimitOrderCancel
       "comment_options" -> CommentOptions
       _ ->
-        Logger.info("ExGolos Ops ProducerConsumer encountered unknown op_type: #{op_type}")
+        Logger.info("Steemex Ops ProducerConsumer encountered unknown op_type: #{op_type}")
         nil
     end
   end

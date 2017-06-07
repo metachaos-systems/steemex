@@ -7,7 +7,7 @@ defmodule Steemex.Stage.Ops.ExampleConsumer do
   end
 
   def init(state) do
-    {:consumer, state, subscribe_to: state.subscribe_to}
+    {:consumer, state, subscribe_to: state[:subscribe_to]}
   end
 
   def handle_events(events, _from, state) do
