@@ -17,8 +17,8 @@ defmodule Steemex.Ops.Transform do
       |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
       |> Map.update!(:parent_author, &(if &1 == "", do: nil, else: &1))
       |> AtomicMap.convert(safe: false)
-      |> (&Map.put(&1, :tags, &1.json_metadata.tags)).()
-      |> (&Map.put(&1, :app, &1.json_metadata.app)).()
+      |> (&Map.put(&1, :tags, &1.json_metadata[:tags] || [])).()
+      |> (&Map.put(&1, :app, &1.json_metadata[:app] || nil)).()
     struct(StructuredOps.Comment, op)
   end
 
