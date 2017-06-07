@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.Ops.ExampleConsumer do
+defmodule Steemex.StructuredStage.Ops.ExampleConsumer do
   use GenStage
   alias Steemex.StructuredOps
   require Logger

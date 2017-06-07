@@ -58,7 +58,7 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
       "limit_order_cancel" -> LimitOrderCancel
       "comment_options" -> CommentOptions
       _ ->
-        Logger.info("Steemex Ops ProducerConsumer encountered unknown op_type: #{op_type}")
+        # Logger.info("Steemex Ops ProducerConsumer encountered unknown op_type: #{op_type}")
         nil
     end
   end
