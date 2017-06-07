@@ -11,7 +11,6 @@ defmodule Steemex.Stage.StructuredOps.ProducerConsumer do
   end
 
   def handle_events(events, _from, number) do
-    IO.inspect hd(events)
     structured_events = for {_op_type, op_data, op_metadata} <- events do
        {Steemex.Ops.Transform.prepare_for_db(op_data), op_metadata}
      end
