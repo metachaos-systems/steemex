@@ -56,7 +56,6 @@ defmodule Steemex do
     children = [
       worker(IdStore, []),
       worker(Steemex.WS, [url]),
-      supervisor(Steemex.Stage.Supervisor, []),
     ]
     children = children ++ stages
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
