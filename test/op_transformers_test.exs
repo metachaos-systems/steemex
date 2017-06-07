@@ -11,14 +11,14 @@ defmodule Steemex.Ops.TransformersTest do
   end
 
   test "comment op cleaned correctly " do
-    op = %Ops.Comment{body: "body1", title: "", author: "alice", permlink: "permlink1", json_metadata: "{\"tags\":[\"tag1\"],\"app\":\"steemit/0.1\"}", parent_author: "parent_author1", parent_permlink: "parent_permlink1"}
+    op = %Ops.Comment{body: "body1", title: "", author: "alice", permlink: "permlink1", json_metadata: %{tags: ["tag1"], app: "steemit/0.1"}, parent_author: "parent_author1", parent_permlink: "parent_permlink1"}
     prepared = Ops.Transform.prepare_for_db(op)
     json_metadata = %{tags: ["tag1"], app: "steemit/0.1"}
     assert prepared == %StructuredOps.Comment{body: "body1", title: nil, author: "alice", permlink: "permlink1", tags: json_metadata.tags, app: json_metadata.app, json_metadata: json_metadata, parent_author: "parent_author1", parent_permlink: "parent_permlink1"}
   end
 
   test "comment with no parent_author op cleaned correctly " do
-    op = %Ops.Comment{body: "body1", title: "", author: "alice", permlink: "permlink1", json_metadata: "{\"tags\":[\"tag1\"],\"app\":\"steemit/0.1\"}", parent_author: "", parent_permlink: "category"}
+    op = %Ops.Comment{body: "body1", title: "", author: "alice", permlink: "permlink1", json_metadata: %{tags: ["tag1"], app: "steemit/0.1"}, parent_author: "", parent_permlink: "category"}
     prepared = Ops.Transform.prepare_for_db(op)
     json_metadata = %{tags: ["tag1"], app: "steemit/0.1"}
     assert prepared == %StructuredOps.Comment{body: "body1", title: nil, author: "alice", permlink: "permlink1", tags: json_metadata.tags, app: json_metadata.app, json_metadata: json_metadata, parent_author: nil, parent_permlink: "category"}
