@@ -14,7 +14,6 @@ defmodule Steemex.Ops.Transform do
   def prepare_for_db(%Comment{} = op) do
     op = op
       |> Map.delete(:__struct__)
-      # |> Map.update!(:json_metadata, &Poison.Parser.parse!(&1))
       |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
       |> Map.update!(:parent_author, &(if &1 == "", do: nil, else: &1))
       |> AtomicMap.convert(safe: false)
