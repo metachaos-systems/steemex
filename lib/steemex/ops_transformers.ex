@@ -1,13 +1,14 @@
 defmodule Steemex.Ops.Transform do
-  alias Steemex.Ops.{Transfer, Comment, CustomJson}
+  alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson}
 
   def prepare_for_db(%Transfer{} = op) do
-    {int, remaining_token_string} = Float.parse(op.amount)
-    token = cond do
-      String.match?(remaining_token_string, ~r"SBD") -> "SBD"
-      String.match?(remaining_token_string, ~r"STEEM") -> "STEEM"
-    end
-    %{amount: int, to: op.to, from: op.from, token: token, memo: op.memo}
+    parsed = %{token: _, amount: _} =
+      op.amount
+      |> parse_steemlike_token_amount()
+
+    op
+      |> Map.delete(:__struct__)
+      |> Map.merge(parsed)
   end
 
   def prepare_for_db(%Comment{} = op) do
@@ -20,6 +21,17 @@ defmodule Steemex.Ops.Transform do
       |> (&Map.put(&1, :tags, &1.json_metadata.tags)).()
       |> (&Map.put(&1, :app, &1.json_metadata.app)).()
   end
+
+  def prepare_for_db(%TransferToVesting{} = op) do
+    parsed = %{token: _, amount: _} =
+      op.amount
+      |> parse_steemlike_token_amount()
+
+    op
+      |> Map.delete(:__struct__)
+      |> Map.merge(parsed)
+  end
+
 
   def prepare_for_db(%CustomJson{json: json} = op) when is_binary(json) do
     prepare_for_db(%{op | json: Poison.Parser.parse!(json)})
@@ -38,5 +50,14 @@ defmodule Steemex.Ops.Transform do
   end
 
   def prepare_for_db(op), do: op
+
+  def parse_steemlike_token_amount(binary) do
+    {int, remaining_token_string} = Float.parse(binary)
+    token = cond do
+      String.match?(remaining_token_string, ~r"SBD") -> "SBD"
+      String.match?(remaining_token_string, ~r"STEEM") -> "STEEM"
+    end
+    %{token: token, amount: int}
+  end
 
 end
