@@ -23,4 +23,10 @@ defmodule Steemex.Ops.TransformersTest do
     assert prepared == %{body: "body1", title: nil, author: "alice", permlink: "permlink1", tags: json_metadata.tags, app: json_metadata.app, json_metadata: json_metadata, parent_author: nil, parent_permlink: "category"}
   end
 
+  test "follow op cleaned and parsed correctly " do
+    op = %Ops.CustomJson{id: "follow", json: "[\"follow\",{\"follower\":\"follower1\",\"following\":\"following1\",\"what\":[\"blog\"]}]", "required_auths": [], "required_posting_auths": ["follower1"]}
+    prepared = Steemex.Ops.Transform.prepare_for_db(op)
+    assert prepared == %{follower: "follower1", following: "following1", what: ["blog"]}
+  end
+
 end
