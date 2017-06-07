@@ -1,5 +1,5 @@
 defmodule Steemex.Ops.Transform do
-  alias Steemex.Ops.{Transfer, Comment}
+  alias Steemex.Ops.{Transfer, Comment, CustomJson}
 
   def prepare_for_db(%Transfer{} = op) do
     {int, remaining_token_string} = Float.parse(op.amount)
@@ -19,6 +19,14 @@ defmodule Steemex.Ops.Transform do
       |> AtomicMap.convert(safe: false)
       |> (&Map.put(&1, :tags, &1.json_metadata.tags)).()
       |> (&Map.put(&1, :app, &1.json_metadata.app)).()
+  end
+
+  def prepare_for_db(%CustomJson{id: id} = op) when id == "follow" do
+    op
+      |> Map.get(:json)
+      |> Poison.Parser.parse!
+      |> Enum.at(1)
+      |> AtomicMap.convert(safe: false)
   end
 
   def prepare_for_db(op), do: op
