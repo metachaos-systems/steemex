@@ -33,19 +33,19 @@ defmodule Steemex.Ops.TransformersTest do
   test "reblog op cleaned and parsed correctly " do
     op = %Ops.CustomJson{id: "follow", json: "[\"reblog\",{\"account\":\"account1\",\"author\":\"author1\",\"permlink\":\"permlink1\"}]", "required_auths": [], "required_posting_auths": ["account1"]}
     prepared = Ops.Transform.prepare_for_db(op)
-    assert prepared == %{account: "account1", author: "author1", permlink: "permlink1"}
+    assert prepared == %StructuredOps.Reblog{account: "account1", author: "author1", permlink: "permlink1"}
   end
 
   test "transfer_to_vesting op cleaned and parsed correctly " do
     op = %Ops.TransferToVesting{"to": "account1", "from": "account2", "amount": "3.140 STEEM"}
     prepared = Ops.Transform.prepare_for_db(op)
-    assert prepared == %{to: "account1", from: "account2", amount: 3.14, token: "STEEM"}
+    assert prepared == %StructuredOps.TransferToVesting{to: "account1", from: "account2", amount: 3.14, token: "STEEM"}
   end
 
   test "feed_publish op cleaned and parsed correctly " do
     op = %Ops.FeedPublish{publisher: "account1", exchange_rate: %{"base": "2.295 SBD", "quote": "1.000 STEEM"}}
     prepared = Ops.Transform.prepare_for_db(op)
-    assert prepared == %{publisher: "account1", base_token: "SBD", base_amount: 2.295, quote_token: "STEEM", quote_amount: 1.0}
+    assert prepared == %StructuredOps.FeedPublish{publisher: "account1", base_token: "SBD", base_amount: 2.295, quote_token: "STEEM", quote_amount: 1.0}
   end
 
 

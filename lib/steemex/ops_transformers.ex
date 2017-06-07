@@ -24,13 +24,12 @@ defmodule Steemex.Ops.Transform do
   end
 
   def prepare_for_db(%TransferToVesting{} = op) do
-    parsed = %{token: _, amount: _} =
-      op.amount
-      |> parse_steemlike_token_amount()
+    parsed = op.amount |> parse_steemlike_token_amount()
 
-    op
+    op = op
       |> Map.delete(:__struct__)
       |> Map.merge(parsed)
+    struct(StructuredOps.TransferToVesting, op)
   end
 
 
@@ -38,11 +37,12 @@ defmodule Steemex.Ops.Transform do
     base = base |> parse_steemlike_token_amount()
     quote = quote |> parse_steemlike_token_amount()
 
-    op
+    op = op
       |> Map.from_struct
       |> Map.delete(:exchange_rate)
       |> Map.merge(%{base_amount: base.amount, base_token: base.token })
       |> Map.merge(%{quote_amount: quote.amount, quote_token: quote.token})
+    struct(StructuredOps.FeedPublish, op)
   end
 
   def prepare_for_db(%CustomJson{json: json} = op) when is_binary(json) do
@@ -56,8 +56,10 @@ defmodule Steemex.Ops.Transform do
   end
 
   def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "reblog" do
-    op_data
+    op = op_data
       |> AtomicMap.convert(safe: false)
+
+    struct(StructuredOps.Reblog, op)
   end
 
   def prepare_for_db(op), do: op
