@@ -12,7 +12,7 @@ defmodule Steemex.Ops.Transform do
   end
 
   def prepare_for_db(%Comment{} = op) do
-    op
+    op = op
       |> Map.delete(:__struct__)
       |> Map.update!(:json_metadata, &Poison.Parser.parse!(&1))
       |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
@@ -20,6 +20,7 @@ defmodule Steemex.Ops.Transform do
       |> AtomicMap.convert(safe: false)
       |> (&Map.put(&1, :tags, &1.json_metadata.tags)).()
       |> (&Map.put(&1, :app, &1.json_metadata.app)).()
+    struct(StructuredOps.Comment, op)
   end
 
   def prepare_for_db(%TransferToVesting{} = op) do
