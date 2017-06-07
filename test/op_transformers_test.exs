@@ -30,7 +30,7 @@ defmodule Steemex.Ops.TransformersTest do
   end
 
   test "reblog op cleaned and parsed correctly " do
-    op = %Ops.CustomJson{"id": "follow", "json": "[\"reblog\",{\"account\":\"account1\",\"author\":\"author1\",\"permlink\":\"permlink1\"}]", "required_auths": [], "required_posting_auths": ["account1"]}
+    op = %Ops.CustomJson{id: "follow", json: "[\"reblog\",{\"account\":\"account1\",\"author\":\"author1\",\"permlink\":\"permlink1\"}]", "required_auths": [], "required_posting_auths": ["account1"]}
     prepared = Ops.Transform.prepare_for_db(op)
     assert prepared == %{account: "account1", author: "author1", permlink: "permlink1"}
   end
