@@ -27,7 +27,7 @@ defmodule Steemex.Ops.TransformersTest do
   test "follow op cleaned and parsed correctly " do
     op = %Ops.CustomJson{id: "follow", json: "[\"follow\",{\"follower\":\"follower1\",\"following\":\"following1\",\"what\":[\"blog\"]}]", "required_auths": [], "required_posting_auths": ["follower1"]}
     prepared = Ops.Transform.prepare_for_db(op)
-    assert prepared == %{follower: "follower1", following: "following1", what: ["blog"]}
+    assert prepared == %StructuredOps.Follow{follower: "follower1", following: "following1", what: ["blog"]}
   end
 
   test "reblog op cleaned and parsed correctly " do

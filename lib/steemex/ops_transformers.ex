@@ -49,14 +49,13 @@ defmodule Steemex.Ops.Transform do
     prepare_for_db(%{op | json: Poison.Parser.parse!(json)})
   end
 
-  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]})
-   when id == "follow" and op_name == "follow" do
-    op_data
+  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "follow" do
+    op = op_data
       |> AtomicMap.convert(safe: false)
+    struct(StructuredOps.Follow, op)
   end
 
-  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]})
-   when id == "follow" and op_name == "reblog" do
+  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "reblog" do
     op_data
       |> AtomicMap.convert(safe: false)
   end
