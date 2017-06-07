@@ -21,11 +21,19 @@ defmodule Steemex.Ops.Transform do
       |> (&Map.put(&1, :app, &1.json_metadata.app)).()
   end
 
-  def prepare_for_db(%CustomJson{id: id} = op) when id == "follow" do
-    op
-      |> Map.get(:json)
-      |> Poison.Parser.parse!
-      |> Enum.at(1)
+  def prepare_for_db(%CustomJson{json: json} = op) when is_binary(json) do
+    prepare_for_db(%{op | json: Poison.Parser.parse!(json)})
+  end
+
+  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]})
+   when id == "follow" and op_name == "follow" do
+    op_data
+      |> AtomicMap.convert(safe: false)
+  end
+
+  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]})
+   when id == "follow" and op_name == "reblog" do
+    op_data
       |> AtomicMap.convert(safe: false)
   end
 
