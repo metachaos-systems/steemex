@@ -12,19 +12,18 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
 
   def handle_events(events, _from, number) do
     events = for block <- events, do: unpack_and_convert_operations(block)
-    {:noreply, events, number}
+    {:noreply, List.flatten(events), number}
   end
 
   def unpack_and_convert_operations(block) do
      for tx <- block["transactions"] do
       for op <- tx["operations"] do
-        convert_to_tuple(op)
+        convert_to_tuple(op, block)
       end
      end
-     |> List.flatten
   end
 
-  def convert_to_tuple(op = [op_type, op_data]) do
+  def convert_to_tuple(op = [op_type, op_data], block) do
     parse_json_strings = fn x, key ->
       val = x[key] || "{}"
       case Poison.Parser.parse(val) do
@@ -39,7 +38,7 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
 
     op_struct = select_struct(op_type)
     op_data = if op_struct, do: struct(op_struct,op_data), else: op_data
-    {String.to_atom(op_type), op_data}
+    {String.to_atom(op_type), op_data, %{height: block["height"], timestamp: block["timestamp"]}}
   end
 
 
