@@ -1,5 +1,5 @@
 defmodule Steemex.Ops.Transform do
-  alias Steemex.Ops.{Transfer}
+  alias Steemex.Ops.{Transfer, Comment}
 
   def prepare_for_db(%Transfer{} = op) do
     {int, remaining_token_string} = Float.parse(op.amount)
@@ -8,6 +8,17 @@ defmodule Steemex.Ops.Transform do
       String.match?(remaining_token_string, ~r"STEEM") -> "STEEM"
     end
     %{amount: int, to: op.to, from: op.from, token: token, memo: op.memo}
+  end
+
+  def prepare_for_db(%Comment{} = op) do
+    op
+      |> Map.delete(:__struct__)
+      |> Map.update!(:json_metadata, &Poison.Parser.parse!(&1))
+      |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
+      |> Map.update!(:parent_author, &(if &1 == "", do: nil, else: &1))
+      |> AtomicMap.convert(safe: false)
+      |> (&Map.put(&1, :tags, &1.json_metadata.tags)).()
+      |> (&Map.put(&1, :app, &1.json_metadata.app)).()
   end
 
   def prepare_for_db(op), do: op
