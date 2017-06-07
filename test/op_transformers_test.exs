@@ -41,5 +41,11 @@ defmodule Steemex.Ops.TransformersTest do
     assert prepared == %{to: "account1", from: "account2", amount: 3.14, token: "STEEM"}
   end
 
+  test "feed_publish op cleaned and parsed correctly " do
+    op = %Ops.FeedPublish{publisher: "account1", exchange_rate: %{"base": "2.295 SBD", "quote": "1.000 STEEM"}}
+    prepared = Ops.Transform.prepare_for_db(op)
+    assert prepared == %{publisher: "account1", base_token: "SBD", base_amount: 2.295, quote_token: "STEEM", quote_amount: 1.0}
+  end
+
 
 end
