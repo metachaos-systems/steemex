@@ -38,7 +38,7 @@ defmodule Steemex.Ops.TransformersTest do
   test "transfer_to_vesting op cleaned and parsed correctly " do
     op = %Ops.TransferToVesting{"to": "account1", "from": "account2", "amount": "3.140 STEEM"}
     prepared = Ops.Transform.prepare_for_db(op)
-    assert prepared == %{to: "account1", from: "author1", amount: 3.14, token: "STEEM"}
+    assert prepared == %{to: "account1", from: "account2", amount: 3.14, token: "STEEM"}
   end
 
 
