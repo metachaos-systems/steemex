@@ -1,8 +1,8 @@
-defmodule Steemex.Ops.Transform do
+defmodule Steemex.Ops.Munger do
   alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson, FeedPublish}
   alias Steemex.StructuredOps
 
-  def prepare_for_db(%Transfer{} = op) do
+  def parse(%Transfer{} = op) do
     parsed = parse_steemlike_token_amount(op.amount)
 
     op = op
@@ -11,7 +11,7 @@ defmodule Steemex.Ops.Transform do
     struct(StructuredOps.Transfer, op)
   end
 
-  def prepare_for_db(%Comment{} = op) do
+  def parse(%Comment{} = op) do
     op = op
       |> Map.delete(:__struct__)
       |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
@@ -22,7 +22,7 @@ defmodule Steemex.Ops.Transform do
     struct(StructuredOps.Comment, op)
   end
 
-  def prepare_for_db(%TransferToVesting{} = op) do
+  def parse(%TransferToVesting{} = op) do
     parsed = op.amount |> parse_steemlike_token_amount()
 
     op = op
@@ -32,7 +32,7 @@ defmodule Steemex.Ops.Transform do
   end
 
 
-  def prepare_for_db(%FeedPublish{exchange_rate: %{base: base, quote: quote}} = op) do
+  def parse(%FeedPublish{exchange_rate: %{base: base, quote: quote}} = op) do
     base = base |> parse_steemlike_token_amount()
     quote = quote |> parse_steemlike_token_amount()
 
@@ -44,24 +44,24 @@ defmodule Steemex.Ops.Transform do
     struct(StructuredOps.FeedPublish, op)
   end
 
-  def prepare_for_db(%CustomJson{json: json} = op) when is_binary(json) do
-    prepare_for_db(%{op | json: Poison.Parser.parse!(json)})
+  def parse(%CustomJson{json: json} = op) when is_binary(json) do
+    parse(%{op | json: Poison.Parser.parse!(json)})
   end
 
-  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "follow" do
+  def parse(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "follow" do
     op = op_data
       |> AtomicMap.convert(safe: false)
     struct(StructuredOps.Follow, op)
   end
 
-  def prepare_for_db(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "reblog" do
+  def parse(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "reblog" do
     op = op_data
       |> AtomicMap.convert(safe: false)
 
     struct(StructuredOps.Reblog, op)
   end
 
-  def prepare_for_db(op) when is_map(op), do: op
+  def parse(op) when is_map(op), do: op
 
   def parse_steemlike_token_amount(binary) do
     {int, remaining_token_string} = Float.parse(binary)
