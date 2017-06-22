@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.StructuredOps do
+defmodule Steemex.Stage.MungedOps do
   use GenStage
   require Logger
 
@@ -14,7 +14,10 @@ defmodule Steemex.Stage.StructuredOps do
   def handle_events(events, _from, number) do
     structured_events = Enum.map(
       events,
-      fn ev -> Map.update!(ev, :data, &Steemex.Ops.Transform.prepare_for_db/1) end
+      fn ev ->
+        ev
+        |> Map.update!(ev, :data, &Steemex.Ops.Transform.prepare_for_db/1)
+     end
     )
     {:noreply, structured_events, number}
   end
