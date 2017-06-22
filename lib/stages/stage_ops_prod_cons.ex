@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.Ops.ProducerConsumer do
+defmodule Steemex.Stage.Ops do
   use GenStage
   require Logger
 
@@ -16,11 +16,30 @@ defmodule Steemex.Stage.Ops.ProducerConsumer do
   end
 
   def unpack_and_convert_operations(block) do
-     for tx <- block["transactions"] do
-      for op <- tx["operations"] do
-        convert_to_tuple(op, block)
+     for tx <- block.transactions do
+      for op <- tx.operations do
+        convert_to_event(op, block)
       end
      end
+  end
+
+  def convert_to_event(op = [op_type, op_data], block) do
+    parse_json_strings = fn x, key ->
+      val = x[key] || "{}"
+      case Poison.Parser.parse(val) do
+         {:ok, map} -> put_in(x, [key], map)
+         {:error, _} -> %{}
+      end
+    end
+    op_data = op_data
+      |> AtomicMap.convert(safe: false)
+      |> parse_json_strings.(:json)
+      |> parse_json_strings.(:json_metadata)
+
+    op_struct = select_struct(op_type)
+    op_data = if op_struct, do: struct(op_struct, op_data), else: op_data
+    metadata = %{height: block.height, timestamp: block.timestamp, source: :golos, type: String.to_atom(op_type) }
+    %Steemex.Event{data: op_data, metadata: metadata}
   end
 
   def convert_to_tuple(op = [op_type, op_data], block) do
