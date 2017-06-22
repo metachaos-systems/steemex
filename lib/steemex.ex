@@ -75,7 +75,7 @@ defmodule Steemex do
     end
 
     case response["error"] do
-      nil -> {:ok, response["result"]}
+      nil -> {:ok, AtomicMap.convert(response["result"], safe: false, underscore: false)}
       _ -> {:error, response["error"]}
     end
   end
