@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.StructuredOps.ExampleConsumer do
+defmodule Steemex.Stage.ExampleConsumer do
   use GenStage
   alias Steemex.StructuredOps
   require Logger
@@ -8,6 +8,7 @@ defmodule Steemex.Stage.StructuredOps.ExampleConsumer do
   end
 
   def init(state) do
+    Logger.info("Example consumer is initializing...")
     {:consumer, state, subscribe_to: state[:subscribe_to]}
   end
 
@@ -18,14 +19,14 @@ defmodule Steemex.Stage.StructuredOps.ExampleConsumer do
     {:noreply, [], state}
   end
 
-  def process_event({%StructuredOps.Reblog{} = op_data, %{height: h, timestamp: t} =  op_metadata}) do
+  def process_event(%{data: %StructuredOps.Reblog{} = op_data, metadata: %{height: h, timestamp: t} = op_metadata}) do
       Logger.info """
       New reblog:
       #{inspect op_data} at height #{h} and time #{t}
       """
   end
 
-  def process_event({op_data, %{height: h, timestamp: t} =  op_metadata}) do
+  def process_event(%{data: op_data, metadata: %{height: h, timestamp: t} =  op_metadata}) do
       Logger.info """
       New operation:
       #{inspect op_data} at height #{h} and time #{t}
