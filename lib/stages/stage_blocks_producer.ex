@@ -11,6 +11,7 @@ defmodule Steemex.Stage.Blocks do
 
   def init(state)  do
     :timer.send_interval(@tick_interval, :tick)
+    state = if state === [], do: %{}
     {:producer, state, dispatcher: GenStage.BroadcastDispatcher}
   end
 
