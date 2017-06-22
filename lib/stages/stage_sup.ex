@@ -1,14 +1,15 @@
 defmodule Steemex.Stage.Supervisor do
   use Supervisor
   alias Steemex.Stage
+
   def start_link do
     Supervisor.start_link(__MODULE__, :ok, name: Steemex.Stage.Supervisor)
   end
 
   def init(:ok) do
-    blocks_producer = Stage.Blocks.Producer
-    stage_ops_prod_cons = Stage.Ops.ProducerConsumer
-    stage_structured_ops_prod_cons = Stage.StructuredOps.ProducerConsumer
+    blocks_producer = Stage.Blocks
+    stage_ops_prod_cons = Stage.Ops
+    stage_structured_ops_prod_cons = Stage.StructuredOps
     children = [
       worker( Stage.Blocks.Producer, [[], [name: blocks_producer] ] ),
       worker( stage_ops_prod_cons, [[subscribe_to: [blocks_producer]], [name: stage_ops_prod_cons] ] ),
