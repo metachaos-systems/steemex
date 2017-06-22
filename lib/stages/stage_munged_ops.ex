@@ -17,10 +17,21 @@ defmodule Steemex.Stage.MungedOps do
       fn ev ->
         ev
         |> Map.update!(:data, &Steemex.Ops.Munger.parse/1)
-        |> Map.update!(:metadata, &(Map.put(&1, :munged, true)))
+        |> mark_if_munged
      end
     )
+
+
     {:noreply, structured_events, number}
   end
 
+  def mark_if_munged(ev) do
+    munged_ops_struct = Map.get(ev.data, :__struct__) |> Atom.to_string() |> String.downcase |> String.contains?("munged")
+    if munged_ops_struct do
+      new_metadata = Map.put(ev.metadata, :munged, :true)
+      Map.put(ev, :metadata, new_metadata)
+    else
+      ev
+    end
+  end
 end
