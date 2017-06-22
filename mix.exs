@@ -37,6 +37,7 @@
       {:atomic_map, "~> 0.9.0"},
       {:credo, ">= 0.0.0", only: [:test, :dev]},
       {:ex_doc, ">= 0.0.0", only: :dev},
+      {:exconstructor, ">= 0.0.0"},
     ]
   end
 
