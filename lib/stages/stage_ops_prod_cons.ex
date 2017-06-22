@@ -33,7 +33,7 @@ defmodule Steemex.Stage.Ops do
       end
     end
     op_data = op_data
-      |> AtomicMap.convert(safe: false)
+      |> AtomicMap.convert(safe: false, underscore: false )
       |> parse_json_strings.(:json)
       |> parse_json_strings.(:json_metadata)
 

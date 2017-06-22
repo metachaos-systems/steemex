@@ -12,9 +12,9 @@ defmodule Steemex.Stage.StructuredOps do
   end
 
   def handle_events(events, _from, number) do
-    structured_events = for {_op_type, op_data, op_metadata} <- events do
-       {Steemex.Ops.Transform.prepare_for_db(op_data), op_metadata}
-     end
+    structured_events = Enum.map(events,
+      fn ev -> Map.update!(ev, :data, &Steemex.Ops.Transform.prepare_for_db/1) end
+    )
     {:noreply, structured_events, number}
   end
 

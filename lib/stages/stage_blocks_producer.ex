@@ -4,6 +4,7 @@ defmodule Steemex.Stage.Blocks do
   """
   @tick_interval 1_000
   use GenStage
+  require Logger
 
   def start_link(args, options) do
     GenStage.start_link(__MODULE__, args, options)
@@ -23,18 +24,19 @@ defmodule Steemex.Stage.Blocks do
   def handle_info(:tick, state) do
     {:ok, %{head_block_number: height}} = Steemex.get_dynamic_global_properties()
     previous_height = Map.get(state, :previous_height, nil)
-    if height === previous_height do
-      {:noreply, [], state}
+    {events, state} = if height === previous_height do
+      {[], state}
     else
       {:ok, block} = Steemex.get_block(height)
       if block do
         block = Map.put(block, :height, height)
-        state = Map.put(state, :previous_height, height)
-        {:noreply, [block], state}
+        new_state = Map.put(state, :previous_height, height)
+        {[block], new_state}
       else
-        {:noreply, [], state}
+        {[block], state}
       end
     end
+    {:noreply, events, state}
   end
 
 end
