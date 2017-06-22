@@ -43,25 +43,6 @@ defmodule Steemex.Stage.Ops do
     %Steemex.Event{data: op_data, metadata: metadata}
   end
 
-  def convert_to_tuple(op = [op_type, op_data], block) do
-    parse_json_strings = fn x, key ->
-      val = x[key] || "{}"
-      case Poison.Parser.parse(val) do
-         {:ok, map} -> put_in(x, [key], map)
-         {:error, _} -> %{}
-      end
-    end
-    op_data = op_data
-      |> AtomicMap.convert(safe: false)
-      |> parse_json_strings.(:json)
-      |> parse_json_strings.(:json_metadata)
-
-    op_struct = select_struct(op_type)
-    op_data = if op_struct, do: struct(op_struct,op_data), else: op_data
-    {String.to_atom(op_type), op_data, %{height: block["height"], timestamp: block["timestamp"]}}
-  end
-
-
   def select_struct(op_type) do
     alias Steemex.Ops.{Comment, Vote, CustomJson, POW2, CommentOptions,
       FeedPublish, Transfer, AccountCreate,TransferToVesting, LimitOrderCreate, LimitOrderCancel}
