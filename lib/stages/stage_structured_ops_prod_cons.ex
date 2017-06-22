@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.StructuredOps.ProducerConsumer do
+defmodule Steemex.Stage.StructuredOps do
   use GenStage
   require Logger
 
