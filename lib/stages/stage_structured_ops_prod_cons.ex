@@ -7,6 +7,7 @@ defmodule Steemex.Stage.StructuredOps do
   end
 
   def init(state) do
+    Logger.info("StructuredOps stage is initializing...")
     {:producer_consumer, state, subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
   end
 
