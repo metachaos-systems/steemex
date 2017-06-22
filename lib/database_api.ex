@@ -30,7 +30,8 @@ defmodule Steemex.DatabaseApi do
   """
   @spec get_block(integer) :: map
   def get_block(height) do
-    call("get_block", [height])
+    {:ok, block} = call("get_block", [height])
+    {:ok, Steemex.Block.new(block)}
   end
 
   # CONTENT
