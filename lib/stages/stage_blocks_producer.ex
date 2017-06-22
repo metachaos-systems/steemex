@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.Blocks.Producer do
+defmodule Steemex.Stage.Blocks do
   @moduledoc """
   Produces Golos block data with @tick_interval
   """
@@ -19,18 +19,20 @@ defmodule Steemex.Stage.Blocks.Producer do
   end
 
   def handle_info(:tick, state) do
-    {:ok, %{"head_block_number" => height}} = Steemex.get_dynamic_global_properties()
-    if height === state[:previous_height] do
+    {:ok, %{head_block_number: height}} = Steemex.get_dynamic_global_properties()
+    previous_height = Map.get(state, :previous_height, nil)
+    if height === previous_height do
       {:noreply, [], state}
     else
       {:ok, block} = Steemex.get_block(height)
       if block do
-        block = put_in(block, ["height"], height)
-        state = put_in(state, [:previous_height], height)
+        block = Map.put(block, :height, height)
+        state = Map.put(state, :previous_height, height)
         {:noreply, [block], state}
       else
         {:noreply, [], state}
       end
     end
   end
+
 end
