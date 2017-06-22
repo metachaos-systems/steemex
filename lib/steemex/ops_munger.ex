@@ -1,6 +1,6 @@
 defmodule Steemex.Ops.Munger do
   alias Steemex.Ops.{Transfer, TransferToVesting,Comment, CustomJson, FeedPublish}
-  alias Steemex.StructuredOps
+  alias Steemex.MungedOps
 
   def parse(%Transfer{} = op) do
     parsed = parse_steemlike_token_amount(op.amount)
@@ -8,7 +8,7 @@ defmodule Steemex.Ops.Munger do
     op = op
       |> Map.delete(:__struct__)
       |> Map.merge(parsed)
-    struct(StructuredOps.Transfer, op)
+    struct(MungedOps.Transfer, op)
   end
 
   def parse(%Comment{} = op) do
@@ -19,7 +19,7 @@ defmodule Steemex.Ops.Munger do
       |> AtomicMap.convert(safe: false)
       |> (&Map.put(&1, :tags, &1.json_metadata[:tags] || [])).()
       |> (&Map.put(&1, :app, &1.json_metadata[:app] || nil)).()
-    struct(StructuredOps.Comment, op)
+    struct(MungedOps.Comment, op)
   end
 
   def parse(%TransferToVesting{} = op) do
@@ -28,7 +28,7 @@ defmodule Steemex.Ops.Munger do
     op = op
       |> Map.delete(:__struct__)
       |> Map.merge(parsed)
-    struct(StructuredOps.TransferToVesting, op)
+    struct(MungedOps.TransferToVesting, op)
   end
 
 
@@ -41,7 +41,7 @@ defmodule Steemex.Ops.Munger do
       |> Map.delete(:exchange_rate)
       |> Map.merge(%{base_amount: base.amount, base_token: base.token })
       |> Map.merge(%{quote_amount: quote.amount, quote_token: quote.token})
-    struct(StructuredOps.FeedPublish, op)
+    struct(MungedOps.FeedPublish, op)
   end
 
   def parse(%CustomJson{json: json} = op) when is_binary(json) do
@@ -51,14 +51,14 @@ defmodule Steemex.Ops.Munger do
   def parse(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "follow" do
     op = op_data
       |> AtomicMap.convert(safe: false)
-    struct(StructuredOps.Follow, op)
+    struct(MungedOps.Follow, op)
   end
 
   def parse(%CustomJson{id: id, json: [op_name, op_data]}) when id == "follow" and op_name == "reblog" do
     op = op_data
       |> AtomicMap.convert(safe: false)
 
-    struct(StructuredOps.Reblog, op)
+    struct(MungedOps.Reblog, op)
   end
 
   def parse(op) when is_map(op), do: op

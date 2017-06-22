@@ -7,7 +7,7 @@ defmodule Steemex.Stage.MungedOps do
   end
 
   def init(state) do
-    Logger.info("Steemex StructuredOps stage is initializing...")
+    Logger.info("Steemex MungedOps stage is initializing...")
     {:producer_consumer, state, subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
   end
 
@@ -16,8 +16,8 @@ defmodule Steemex.Stage.MungedOps do
       events,
       fn ev ->
         ev
-        |> Map.update!(ev, :data, &Steemex.Ops.Munger.parse/1)
-        |> Map.update!(ev, :metadata, &(Map.put(&1, :munged, true))  )
+        |> Map.update!(:data, &Steemex.Ops.Munger.parse/1)
+        |> Map.update!(:metadata, &(Map.put(&1, :munged, true)))
      end
     )
     {:noreply, structured_events, number}

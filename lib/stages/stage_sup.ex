@@ -11,7 +11,7 @@ defmodule Steemex.Stage.Supervisor do
     Logger.info("Steemex Stage Supervisor is initializing...")
     blocks_producer = Steemex.Stage.Blocks
     stage_ops_prod_cons = Steemex.Stage.Ops
-    stage_structured_ops_prod_cons = Steemex.Stage.StructuredOps
+    stage_structured_ops_prod_cons = Steemex.Stage.MungedOps
     children = [
       worker(blocks_producer, [[], [name: blocks_producer]]),
       worker(stage_ops_prod_cons, [[subscribe_to: [blocks_producer]], [name: stage_ops_prod_cons]]),

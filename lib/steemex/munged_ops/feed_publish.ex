@@ -1,4 +1,4 @@
-defmodule Steemex.StructuredOps.FeedPublish do
+defmodule Steemex.MungedOps.FeedPublish do
   @enforce_keys [:publisher, :base_token, :base_amount, :quote_token, :quote_amount]
   defstruct [:publisher, :base_token, :base_amount, :quote_token, :quote_amount]
 end

@@ -1,6 +1,6 @@
 defmodule Steemex.Stage.ExampleConsumer do
   use GenStage
-  alias Steemex.StructuredOps
+  alias Steemex.MungedOps
   require Logger
 
   def start_link(args, options \\ []) do
@@ -19,17 +19,21 @@ defmodule Steemex.Stage.ExampleConsumer do
     {:noreply, [], state}
   end
 
-  def process_event(%{data: %StructuredOps.Reblog{} = op_data, metadata: %{height: h, timestamp: t} = op_metadata}) do
+  def process_event(%{data: %MungedOps.Reblog{} = data, metadata: %{height: h, timestamp: t} = metadata}) do
       Logger.info """
       New reblog:
-      #{inspect op_data} at height #{h} and time #{t}
+      #{inspect data}
+      with metadata
+      #{inspect metadata}
       """
   end
 
-  def process_event(%{data: op_data, metadata: %{height: h, timestamp: t} =  op_metadata}) do
+  def process_event(%{data: data, metadata: %{height: h, timestamp: t} = metadata}) do
       Logger.info """
       New operation:
-      #{inspect op_data} at height #{h} and time #{t}
+      #{inspect data}
+      with metadata
+      #{inspect metadata}
       """
   end
 
