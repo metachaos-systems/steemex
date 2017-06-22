@@ -7,7 +7,7 @@ defmodule Steemex.Stage.Ops do
   end
 
   def init(state) do
-    Logger.info("Ops Stage is initializing...")
+    Logger.info("Steemex Ops Stage is initializing...")
     {:producer_consumer, state, subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
   end
 

@@ -8,7 +8,7 @@ defmodule Steemex.Stage.Supervisor do
   end
 
   def init(:ok) do
-    Logger.info("Stage Supervisor is initializing...")
+    Logger.info("Steemex Stage Supervisor is initializing...")
     blocks_producer = Steemex.Stage.Blocks
     stage_ops_prod_cons = Steemex.Stage.Ops
     stage_structured_ops_prod_cons = Steemex.Stage.StructuredOps
