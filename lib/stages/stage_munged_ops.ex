@@ -16,7 +16,8 @@ defmodule Steemex.Stage.MungedOps do
       events,
       fn ev ->
         ev
-        |> Map.update!(ev, :data, &Steemex.Ops.Transform.prepare_for_db/1)
+        |> Map.update!(ev, :data, &Steemex.Ops.Munger.parse/1)
+        |> Map.update!(ev, :metadata, &(Map.put(&1, :munged, true))  )
      end
     )
     {:noreply, structured_events, number}
