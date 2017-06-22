@@ -14,19 +14,17 @@ defmodule Steemex.Stage.MungedOps do
   def handle_events(events, _from, number) do
     structured_events = Enum.map(
       events,
-      fn ev ->
-        ev
-        |> Map.update!(:data, &Steemex.Ops.Munger.parse/1)
-        |> mark_if_munged
-     end
+      fn ev -> ev |> Map.update!(:data, &Steemex.Ops.Munger.parse/1) |> mark_if_munged end
     )
-
-
     {:noreply, structured_events, number}
   end
 
   def mark_if_munged(ev) do
-    munged_ops_struct = Map.get(ev.data, :__struct__) |> Atom.to_string() |> String.downcase |> String.contains?("munged")
+    munged_ops_struct = ev.data
+      |> Map.get(:__struct__)
+      |> Atom.to_string()
+      |> String.downcase()
+      |> String.contains?("munged")
     if munged_ops_struct do
       new_metadata = Map.put(ev.metadata, :munged, :true)
       Map.put(ev, :metadata, new_metadata)
