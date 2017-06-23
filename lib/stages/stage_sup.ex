@@ -16,7 +16,7 @@ defmodule Steemex.Stage.Supervisor do
       worker(blocks_producer, [[], [name: blocks_producer]]),
       worker(stage_ops_prod_cons, [[subscribe_to: [blocks_producer]], [name: stage_ops_prod_cons]]),
       worker(stage_structured_ops_prod_cons, [[subscribe_to: [stage_ops_prod_cons]], [name: stage_structured_ops_prod_cons]]),
-      # worker(Stage.ExampleConsumer, [[subscribe_to: [stage_structured_ops_prod_cons]]]),
+      worker(Stage.ExampleConsumer, [[subscribe_to: [stage_structured_ops_prod_cons]]]),
     ]
     supervise(children, strategy: :one_for_all)
   end

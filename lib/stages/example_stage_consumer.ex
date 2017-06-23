@@ -28,7 +28,7 @@ defmodule Steemex.Stage.ExampleConsumer do
       """
   end
 
-  def process_event(%{data: data, metadata: %{height: h, timestamp: t} = metadata}) do
+  def process_event(%{data: data, metadata: %{block_height: h, timestamp: t} = metadata}) do
       Logger.info """
       New operation:
       #{inspect data}

@@ -31,7 +31,7 @@ defmodule Steemex.Stage.Blocks do
       if block do
         block = Map.put(block, :height, height)
         new_state = Map.put(state, :previous_height, height)
-        ev = %Steem.Event{data: block, metadata: %{source: :steem}}
+        ev = %Steemex.Event{data: block, metadata: %{source: :steem}}
         {:noreply, [ev], new_state}
       else
         {:noreply, [], state}
