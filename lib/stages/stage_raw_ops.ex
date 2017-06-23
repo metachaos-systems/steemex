@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.Ops do
+defmodule Steemex.Stage.RawOps do
   use GenStage
   require Logger
 
