@@ -12,11 +12,14 @@ defmodule Steemex.Stage.MungedOps do
   end
 
   def handle_events(events, _from, number) do
-    structured_events = Enum.map(
-      events,
-      fn ev -> ev |> Map.update!(:data, &Steemex.Ops.Munger.parse/1) |> mark_if_munged end
-    )
+    structured_events = Enum.map(events, &munge/1)
     {:noreply, structured_events, number}
+  end
+
+  def munge(event) do
+    ev
+    |> Map.update!(:data, &Steemex.Ops.Munger.parse/1)
+    |> mark_if_munged end
   end
 
   def mark_if_munged(ev) do
