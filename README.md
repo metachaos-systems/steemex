@@ -38,23 +38,25 @@ The main module function is `Steemex.call`. It will block the calling process an
 
 # Documentation
 
-All database api functions have docs, typespecs and example API responses. Most example responses are from the Golos blockchain, their shape is identical to Steem counterparts.
+All database api functions have docs, typespecs and example API responses.
 
 # GenStage
 
-ExGolos uses GenStage, [a new specification](http://elixir-lang.org/blog/2016/07/14/announcing-genstage/) for handling and exchanging events among Elixir/Erlang processes.
+Steemex uses GenStage, [a new specification](http://elixir-lang.org/blog/2016/07/14/announcing-genstage/) for handling and exchanging events among Elixir/Erlang processes.
 
 On module app startup two GenStage processes are started and registered:
 
-* Golos.Stage.Blocks.Producer which, perhaps unsurprisingly, is a new blocks producer
-* Golos.Stage.Ops.ProducerConsumer consumes blocks and produces operations
+* Steemex.Stage.Blocks.Producer which, perhaps unsurprisingly, is a new blocks producer
+* Steemex.Stage.RawOps produces raw blockchain operations
+* Steemex.Stage.MungedOps produces parsed, cleaned and transformed operations
 
 
 ## An example of GenStage consumer to handle stream of new operations
 
 ```
-defmodule Steemex.Stage.Ops.ExampleConsumer do
+defmodule Steemex.Stage.ExampleConsumer do
   use GenStage
+  alias Steemex.MungedOps
   require Logger
 
   def start_link(args, options \\ []) do
@@ -62,17 +64,33 @@ defmodule Steemex.Stage.Ops.ExampleConsumer do
   end
 
   def init(state) do
-    {:consumer, state, subscribe_to: state.subscribe_to}
+    Logger.info("Example consumer is initializing...")
+    {:consumer, state, subscribe_to: state[:subscribe_to]}
   end
 
   def handle_events(events, _from, state) do
     for op <- events do
-      Logger.info """
-      New operation:
-      #{inspect op}
-      """
+      process_event(op)
     end
     {:noreply, [], state}
+  end
+
+  def process_event(%{data: %MungedOps.Reblog{} = data, metadata: %{height: h, timestamp: t} = metadata}) do
+      Logger.info """
+      New reblog:
+      #{inspect data}
+      with metadata
+      #{inspect metadata}
+      """
+  end
+
+  def process_event(%{data: data, metadata: %{block_height: h, timestamp: t} = metadata}) do
+      Logger.info """
+      New operation:
+      #{inspect data}
+      with metadata
+      #{inspect metadata}
+      """
   end
 
 end
@@ -82,7 +100,6 @@ end
 
 Steemex is under active development.
 
-* ~~Investigate using GenStage~~
 * Add more utility functions
 * Add more types and structs
 * Add transaction broadcasting
