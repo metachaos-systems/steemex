@@ -1,6 +1,6 @@
 defmodule Steemex.Stage.Blocks do
   @moduledoc """
-  Produces Golos block data with @tick_interval
+  Produces Steem blocks, check for new blcoks with tick_interval
   """
   @tick_interval 1_000
   use GenStage
@@ -31,13 +31,13 @@ defmodule Steemex.Stage.Blocks do
       if block do
         block = Map.put(block, :height, height)
         new_state = Map.put(state, :previous_height, height)
-        ev = %Steemex.Event{data: block, metadata: %{source: :steem}}
-        {:noreply, [ev], new_state}
+        meta = %{source: :steem, type: :block}
+        events = [%Steemex.Event{data: block, metadata: meta}]
+        {:noreply, events, new_state}
       else
         {:noreply, [], state}
       end
     end
-
   end
 
 end
