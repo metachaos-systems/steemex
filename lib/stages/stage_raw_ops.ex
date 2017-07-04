@@ -41,7 +41,7 @@ defmodule Steemex.Stage.RawOps do
     op_data = if op_struct, do: struct(op_struct, op_data), else: op_data
     metadata = %{
       block_height: block.height,
-      timestamp: NaiveDateTime.from_iso8601!(block.timestamp),
+      timestamp: block.timestamp,
       source: :steem,
       type: String.to_atom(op_type),
       munged: false}
