@@ -31,7 +31,11 @@ defmodule Steemex.DatabaseApi do
   @spec get_block(integer) :: map
   def get_block(height) do
     {:ok, block} = call("get_block", [height])
-    {:ok, Steemex.Block.new(block)}
+    block = block
+      |> Map.put(:height, height)
+      |> Steemex.Block.parse_raw_data()
+      |> Steemex.Block.new()
+    {:ok, block}
   end
 
   # CONTENT
