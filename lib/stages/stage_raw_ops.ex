@@ -16,7 +16,7 @@ defmodule Steemex.Stage.RawOps do
     {:noreply, List.flatten(events), number}
   end
 
-  def unpack_and_convert_operations(%Steemex.Event{data: block}) do
+  def unpack_and_convert_operations(%{data: block}) do
      for tx <- block.transactions do
       for op <- tx.operations do
         convert_to_event(op, block)
