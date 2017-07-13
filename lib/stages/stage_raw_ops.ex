@@ -42,7 +42,8 @@ defmodule Steemex.Stage.RawOps do
     metadata = %{
       block_height: block.height,
       timestamp: block.timestamp,
-      source: :steem,
+      source: :blockchain,
+      blockchain: :steem,
       type: String.to_atom(op_type),
       munged: false}
     %Steemex.Event{data: op_data, metadata: metadata}
