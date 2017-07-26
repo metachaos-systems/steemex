@@ -77,7 +77,11 @@ defmodule Steemex.DatabaseApi do
   """
   @spec get_content(String.t, String.t) :: map
   def get_content(author, permlink) do
-    call("get_content", [author, permlink])
+    with {:ok, comment} <- call("get_content", [author, permlink]) do
+      {:ok, Steemex.Cleaner.strip_token_names_and_convert_to_number(comment)}
+    else
+      err -> err
+    end
   end
 
 
