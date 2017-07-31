@@ -7,7 +7,7 @@ defmodule SteemexTest do
 
 
     Steemex.IdStore.start_link
-    Steemex.WS.start_link("wss://steemd.steemit.com/")
+    Steemex.WS.start_link("wss://steemd-int.steemit.com/")
 
     %{
       params:

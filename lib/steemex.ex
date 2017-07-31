@@ -3,7 +3,7 @@ defmodule Steemex do
   alias Steemex.IdStore
   alias Steemex.Stage
 
-  @default_ws_url "wss://steemd.steemit.com/"
+  @default_ws_url "wss://steemd-int.steemit.com/"
 
   defdelegate get_current_median_history_price(), to: Steemex.DatabaseApi
   defdelegate get_feed_history(), to: Steemex.DatabaseApi
