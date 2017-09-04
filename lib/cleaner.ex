@@ -13,14 +13,26 @@ defmodule Steemex.Cleaner do
     update_in(data.tags, &List.wrap/1)
   end
 
-  def parse_and_extract_fields(data = %{json_metadata: ""}) do
+  def parse_json_strings(x, key) do
+      if is_map(x[key]) do
+        x
+      else
+        val = x[key] || "{}"
+        case Poison.Parser.parse(val) do
+           {:ok, map} -> put_in(x, [key], map)
+           {:error, _} -> put_in(x, [key], %{})
+        end
+      end
+  end
+
+  def extract_fields(data = %{json_metadata: ""}) do
     data
     |> Map.put(:json_metadata, %{})
     |> Map.put(:tags, [])
     |> Map.put(:tags, nil)
   end
 
-  def parse_and_extract_fields(data) do
+  def extract_fields(data) do
     data
       |> (&Map.put(&1, :tags, &1.json_metadata[:tags] || [])).()
       |> (&Map.put(&1, :app, &1.json_metadata[:app] || nil)).()

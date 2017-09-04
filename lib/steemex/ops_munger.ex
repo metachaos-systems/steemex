@@ -18,7 +18,8 @@ defmodule Steemex.Ops.Munger do
       |> Map.update!(:title, &(if &1 == "", do: nil, else: &1))
       |> Map.update!(:parent_author, &(if &1 == "", do: nil, else: &1))
       |> AtomicMap.convert(safe: false)
-      |> Cleaner.parse_and_extract_fields()
+      |> Cleaner.parse_json_strings(:json_metadata)
+      |> Cleaner.extract_fields()
     struct(MungedOps.Comment, op)
   end
 
