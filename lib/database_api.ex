@@ -80,6 +80,7 @@ defmodule Steemex.DatabaseApi do
     with {:ok, comment} <- call("get_content", [author, permlink]) do
       cleaned =  comment
         |> Steemex.Cleaner.strip_token_names_and_convert_to_number()
+        |> Steemex.Cleaner.parse_and_extract_fields()
         |> Steemex.Cleaner.prepare_tags()
       {:ok, cleaned}
     else
