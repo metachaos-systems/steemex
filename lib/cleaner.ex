@@ -9,4 +9,9 @@ defmodule Steemex.Cleaner do
     end
   end
 
+  def prepare_tags(data) do
+    update_in(data.tags, &List.wrap/1)
+  end
+
+
 end
