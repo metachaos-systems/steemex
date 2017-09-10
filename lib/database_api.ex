@@ -83,6 +83,7 @@ defmodule Steemex.DatabaseApi do
         |> Steemex.Cleaner.parse_json_strings(:json_metadata)
         |> Steemex.Cleaner.extract_fields()
         |> Steemex.Cleaner.prepare_tags()
+        |> Steemex.Cleaner.parse_timedate_strings()
       {:ok, cleaned}
     else
       err -> err

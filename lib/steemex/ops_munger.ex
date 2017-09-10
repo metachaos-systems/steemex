@@ -73,4 +73,5 @@ defmodule Steemex.Ops.Munger do
     %{token: token, amount: int}
   end
 
+
 end
