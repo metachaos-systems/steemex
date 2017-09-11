@@ -84,6 +84,7 @@ defmodule Steemex.DatabaseApi do
         |> Steemex.Cleaner.extract_fields()
         |> Steemex.Cleaner.prepare_tags()
         |> Steemex.Cleaner.parse_timedate_strings()
+        |> Steemex.Cleaner.parse_empty_strings()
       {:ok, cleaned}
     else
       err -> err
