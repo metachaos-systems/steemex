@@ -18,7 +18,7 @@ defmodule Steemex.Stage.RawOps do
   end
 
   def unpack_and_convert_operations(%{data: block, metadata: metadata}) do
-     for tx <- data.transactions do
+     for tx <- block.transactions do
       for op <- tx.operations do
         convert_to_event(op, block, metadata)
       end
