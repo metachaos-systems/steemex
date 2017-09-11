@@ -36,10 +36,11 @@ defmodule Steemex.Stage.RawOps do
     metadata = %{
       block_height: block.height,
       timestamp: block.timestamp,
-      source: :blockchain,
       blockchain: :steem,
       type: String.to_atom(op_type),
       munged: false}
+
+    metadata = Map.put_new(metadata, :source, :naive_realtime)
     %Steemex.Event{data: op_data, metadata: metadata}
   end
 
