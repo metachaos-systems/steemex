@@ -17,15 +17,15 @@ defmodule Steemex.Stage.RawOps do
     {:noreply, List.flatten(events), number}
   end
 
-  def unpack_and_convert_operations(%{data: block}) do
-     for tx <- block.transactions do
+  def unpack_and_convert_operations(%{data: block, metadata: metadata}) do
+     for tx <- data.transactions do
       for op <- tx.operations do
-        convert_to_event(op, block)
+        convert_to_event(op, block, metadata)
       end
      end
   end
 
-  def convert_to_event(op = [op_type, op_data], block) do
+  def convert_to_event(op = [op_type, op_data], block, metadata) do
     op_data = op_data
       |> AtomicMap.convert(safe: false, underscore: false)
       |> Cleaner.parse_json_strings(:json_metadata)
@@ -33,13 +33,14 @@ defmodule Steemex.Stage.RawOps do
 
     op_struct = select_struct(op_type)
     op_data = if op_struct, do: struct(op_struct, op_data), else: op_data
-    metadata = %{
+    new_metadata = %{
       block_height: block.height,
       timestamp: block.timestamp,
       blockchain: :steem,
       type: String.to_atom(op_type),
       munged: false}
 
+    metadata = Map.merge(new_metadata, metadata)
     metadata = Map.put_new(metadata, :source, :naive_realtime)
     %Steemex.Event{data: op_data, metadata: metadata}
   end
