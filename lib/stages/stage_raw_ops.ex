@@ -40,7 +40,7 @@ defmodule Steemex.Stage.RawOps do
       type: String.to_atom(op_type),
       munged: false}
 
-    metadata = Map.merge(new_metadata, metadata)
+    metadata = Map.merge(new_metadata, metadata || %{})
     metadata = Map.put_new(metadata, :source, :naive_realtime)
     %Steemex.Event{data: op_data, metadata: metadata}
   end
