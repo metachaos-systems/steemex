@@ -27,7 +27,7 @@ defmodule SteemexTest do
 
   test "get_content" do
     {:ok, data} = Steemex.get_content("xeroc", "piston-web-first-open-source-steem-gui---searching-for-alpha-testers")
-
+    
     assert %{:"author" => _, :"permlink" => _} = data
     assert data.created.year === 2016
   end

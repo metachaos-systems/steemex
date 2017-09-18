@@ -32,6 +32,7 @@ defmodule Steemex.Cleaner do
         x
       else
         val = x[key] || "{}"
+        val = if is_boolean(val), do: val, else: "{}" # some comments have boolean values instead of json
         case Poison.Parser.parse(val) do
            {:ok, map} -> put_in(x, [key], map)
            {:error, _} -> put_in(x, [key], %{})
