@@ -15,7 +15,7 @@ defmodule Steemex.Cleaner do
       |> Map.update!(:author, &(if &1 == "", do: nil, else: &1))
       |> Map.update!(:permlink, &(if &1 == "", do: nil, else: &1))
   end
-  
+
   def parse_timedate_strings(data) do
     to_parse = ~w(created last_payout cashout_time max_cashout_time active last_update)a
     for {k, v} <- data, into: %{} do
@@ -47,7 +47,7 @@ defmodule Steemex.Cleaner do
   end
 
   def extract_fields(data) do
-    data
+      data
       |> (&Map.put(&1, :tags, &1.json_metadata[:tags] || [])).()
       |> (&Map.put(&1, :app, &1.json_metadata[:app] || nil)).()
   end

@@ -37,12 +37,11 @@ defmodule Steemex.Stage.RawOps do
       block_height: block.height,
       timestamp: block.timestamp,
       blockchain: :steem,
+      source: metadata.source || :naive_realtime,
       type: String.to_atom(op_type),
       munged: false}
 
-    metadata = Map.merge(new_metadata, metadata || %{})
-    metadata = Map.put_new(metadata, :source, :naive_realtime)
-    %Steemex.Event{data: op_data, metadata: metadata}
+    %Steemex.Event{data: op_data, metadata: new_metadata}
   end
 
   def select_struct(op_type) do
