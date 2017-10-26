@@ -49,13 +49,14 @@ defmodule Steemex do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     url = Application.get_env(:steemex, :url) || @default_ws_url
-
+    
+    Logger.info("Steemex WS url is set to #{url}")
     activate_stage_sup? = Application.get_env(:steemex, :activate_stage_sup)
     stages = if activate_stage_sup?, do: [supervisor(Stage.Supervisor, [])], else: []
 
     children = [
-      worker(IdStore, []),
-      worker(Steemex.WS, [url]),
+      worker(Steemex.IdStore, []),
+      worker(Steemex.WSNext, [url]),
     ]
     children = children ++ stages
     opts = [strategy: :one_for_one, name: Steemex.Supervisor]
