@@ -2,6 +2,7 @@ defmodule Steemex do
   use Application
   alias Steemex.IdStore
   alias Steemex.Stage
+  require Logger
 
   @default_ws_url "wss://steemd-int.steemit.com/"
 
@@ -49,7 +50,7 @@ defmodule Steemex do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     url = Application.get_env(:steemex, :url) || @default_ws_url
-    
+
     Logger.info("Steemex WS url is set to #{url}")
     activate_stage_sup? = Application.get_env(:steemex, :activate_stage_sup)
     stages = if activate_stage_sup?, do: [supervisor(Stage.Supervisor, [])], else: []
@@ -66,10 +67,7 @@ defmodule Steemex do
   def call(params, opts \\ [])
 
   def call(params, []) do
-    id = gen_id()
-    IdStore.put(id, {self(), params})
-
-    send_jsonrpc_call(id, params)
+    :ok = send({self, params})
 
     response = receive do
       {:ws_response, {_, _, response}} -> response
@@ -85,15 +83,23 @@ defmodule Steemex do
     end
   end
 
+  def send({from, params}) do
+    # TODO: perhaps implement registry for a id => pid mapping?
+    id = gen_id()
+    message = %{jsonrpc: "2.0", id: id, params: params, method: "call"}
+    :ok = Steemex.IdStore.put(id, {from, params})
+    WebSockex.send_frame(:steemex_ws, {:text, Poison.encode!(message)})
+  end
+
   @doc """
   Sends an event to the WebSocket server
   """
-  defp send_jsonrpc_call(id, params) do
-    send Steemex.WS, {:send, %{jsonrpc: "2.0", id: id, params: params, method: "call"}}
+  defp send_jsonrpc_call(params) do
+    Steemex.WSNext.send({self, params})
   end
 
   defp gen_id do
-    round(:rand.uniform * 1.0e16)
+    round(:rand.uniform * 1.0e16) |> Integer.to_string
   end
 
 end
