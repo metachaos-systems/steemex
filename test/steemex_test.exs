@@ -4,18 +4,18 @@ defmodule SteemexTest do
   @db_api "database_api"
 
   setup_all context do
+    {:ok, pid} = Steemex.WSNext.start_link("wss://ws.golos.io/")
+    {:ok, pid} = Steemex.IdStore.start_link
 
 
-    Steemex.IdStore.start_link
-    Steemex.WS.start_link("wss://steemd-int.steemit.com/")
-
-    %{
-      params:
-      %{
-        glob_dyn_prop: [@db_api, "get_dynamic_global_properties", []],
-        get_block: [@db_api, "get_block", [3_141_592]]
-      }
-    }
+    # %{
+    #   params:
+    #   %{
+    #     glob_dyn_prop: [@db_api, "get_dynamic_global_properties", []],
+    #     get_block: [@db_api, "get_block", [3_141_592]]
+    #   }
+    # }
+    :ok
   end
 
   test "get_dynamic_global_properties call succeeds", context do
@@ -27,7 +27,7 @@ defmodule SteemexTest do
 
   test "get_content" do
     {:ok, data} = Steemex.get_content("xeroc", "piston-web-first-open-source-steem-gui---searching-for-alpha-testers")
-    
+
     assert %{:"author" => _, :"permlink" => _} = data
     assert data.created.year === 2016
   end
