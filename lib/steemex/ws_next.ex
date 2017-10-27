@@ -10,7 +10,7 @@ defmodule Steemex.WSNext do
 
 
   def handle_connect(_conn, state) do
-    Logger.info("Golos websocket is connected!")
+    Logger.info("Steem websocket is connected!")
     {:ok, state}
   end
 
