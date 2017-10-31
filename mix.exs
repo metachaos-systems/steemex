@@ -32,7 +32,7 @@
   defp deps do
     [
       {:websockex, "~> 0.4.0"},
-      {:poison, "~> 2.0"},
+      {:poison, "~> 3.1.0"},
       {:gen_stage, ">= 0.0.0"},
       {:atomic_map, "~> 0.9.0"},
       {:credo, ">= 0.0.0", only: [:test, :dev]},
