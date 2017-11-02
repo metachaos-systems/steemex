@@ -1,10 +1,8 @@
 defmodule Steemex do
   use Application
   alias Steemex.IdStore
-  alias Steemex.Stage
   require Logger
 
-  @default_ws_url "wss://steemd-int.steemit.com/"
 
   defdelegate get_current_median_history_price(), to: Steemex.DatabaseApi
   defdelegate get_feed_history(), to: Steemex.DatabaseApi
@@ -49,19 +47,10 @@ defmodule Steemex do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
-    url = Application.get_env(:steemex, :url) || @default_ws_url
-
-    Logger.info("Steemex WS url is set to #{url}")
-    activate_stage_sup? = Application.get_env(:steemex, :activate_stage_sup)
-    stages = if activate_stage_sup?, do: [supervisor(Stage.Supervisor, [])], else: []
-
     children = [
-      worker(Steemex.IdStore, []),
-      worker(Steemex.WSNext, [url]),
+      supervisor(Steemex.Supervisor, [])
     ]
-    children = children ++ stages
-    opts = [strategy: :one_for_one, name: Steemex.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children, strategy: :one_for_one, max_restarts: 10, max_seconds: 5)
   end
 
   def call(params, opts \\ [])
