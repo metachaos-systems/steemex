@@ -1,4 +1,4 @@
-defmodule Steemex.Stage.Supervisor do
+defmodule Steemex.StageSupervisor do
   use Supervisor
   alias Steemex.Stage
   require Logger
