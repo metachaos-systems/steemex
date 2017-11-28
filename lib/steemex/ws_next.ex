@@ -1,4 +1,4 @@
-defmodule Steemex.WSNext do
+defmodule Steemex.WS do
   use WebSockex
   require Logger
 
