@@ -8,7 +8,9 @@ defmodule Steemex.Stage.MungedOps do
 
   def init(state) do
     Logger.info("Steemex MungedOps stage is initializing...")
-    {:producer_consumer, state, subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
+
+    {:producer_consumer, state,
+     subscribe_to: state[:subscribe_to], dispatcher: GenStage.BroadcastDispatcher}
   end
 
   def handle_events(events, _from, number) do
@@ -23,13 +25,15 @@ defmodule Steemex.Stage.MungedOps do
   end
 
   def mark_if_munged(ev) do
-    munged_ops_struct? = ev.data
+    munged_ops_struct? =
+      ev.data
       |> Map.get(:__struct__)
       |> Atom.to_string()
       |> String.downcase()
       |> String.contains?("munged")
+
     if munged_ops_struct? do
-      new_metadata = Map.put(ev.metadata, :munged, :true)
+      new_metadata = Map.put(ev.metadata, :munged, true)
       Map.put(ev, :metadata, new_metadata)
     else
       ev

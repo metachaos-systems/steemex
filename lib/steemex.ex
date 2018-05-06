@@ -29,7 +29,6 @@ defmodule Steemex do
   defdelegate get_discussions_by_author_before_date(author, start_permlink, before_date, limit),
     to: DatabaseApi
 
-
   defdelegate get_owner_history(name), to: DatabaseApi
   defdelegate get_conversion_requests(), to: DatabaseApi
   defdelegate get_order_book(limit), to: DatabaseApi
@@ -45,7 +44,6 @@ defmodule Steemex do
   defdelegate get_followers(account, start_follower, follow_type, limit), to: DatabaseApi
   defdelegate get_following(account, start_following, follow_type, limit), to: DatabaseApi
 
-
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -59,7 +57,7 @@ defmodule Steemex do
   def call(params, opts \\ [])
 
   def call(params, opts) do
-    case Application.get_env(:steemex, :api) || @default_api  do
+    case Application.get_env(:steemex, :api) || @default_api do
       :steemit_api ->
         call_condenser(params, opts)
 

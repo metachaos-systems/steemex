@@ -10,7 +10,7 @@ defmodule Steemex.Stage.Blocks do
     GenStage.start_link(__MODULE__, args, options)
   end
 
-  def init(state)  do
+  def init(state) do
     Logger.info("Steemex Blocks Stage is initializing...")
     :timer.send_interval(@tick_interval, :tick)
     state = if state === [], do: %{}
@@ -24,6 +24,7 @@ defmodule Steemex.Stage.Blocks do
   def handle_info(:tick, state) do
     {:ok, %{head_block_number: height}} = Steemex.get_dynamic_global_properties()
     previous_height = Map.get(state, :previous_height, nil)
+
     if height === previous_height do
       {:noreply, [], state}
     else
@@ -42,5 +43,4 @@ defmodule Steemex.Stage.Blocks do
       end
     end
   end
-
 end
