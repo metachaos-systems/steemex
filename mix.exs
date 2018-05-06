@@ -38,6 +38,8 @@
       {:credo, ">= 0.0.0", only: [:test, :dev]},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:exconstructor, ">= 0.0.0"},
+      {:jsonrpc2, "~> 1.0"},
+      {:hackney, ">= 0.0.0"},
     ]
   end
 
