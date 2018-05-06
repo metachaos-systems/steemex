@@ -1,10 +1,14 @@
 defmodule Steemex.DatabaseApi do
+  @moduledoc """
+  Module containing all default database_api functions
+  """
+  alias Steemex.{Block, Cleaner}
 
   def call(method, params) do
     Steemex.call(["database_api", method, params])
   end
 
-  @doc"""
+  @doc """
   Returns block data, accepts block height.
 
   Example response:
@@ -31,10 +35,12 @@ defmodule Steemex.DatabaseApi do
   @spec get_block(integer) :: map
   def get_block(height) do
     with {:ok, block} <- call("get_block", [height]) do
-      block = block
+      block =
+        block
         |> Map.put(:height, height)
-        |> Steemex.Block.parse_raw_data()
-        |> Steemex.Block.new()
+        |> Block.parse_raw_data()
+        |> Block.new()
+
       {:ok, block}
     else
       err -> err
@@ -43,7 +49,7 @@ defmodule Steemex.DatabaseApi do
 
   # CONTENT
 
-  @doc"""
+  @doc """
   Returns content data, accepts author and permlink.
 
   Example response:
@@ -78,24 +84,25 @@ defmodule Steemex.DatabaseApi do
     "author_reputation" => "22784203010137"}
   ```
   """
-  @spec get_content(String.t, String.t) :: map
+  @spec get_content(String.t(), String.t()) :: map
   def get_content(author, permlink) do
     with {:ok, comment} <- call("get_content", [author, permlink]) do
-      cleaned =  comment
-        |> Steemex.Cleaner.strip_token_names_and_convert_to_number()
-        |> Steemex.Cleaner.parse_json_strings(:json_metadata)
-        |> Steemex.Cleaner.extract_fields()
-        |> Steemex.Cleaner.prepare_tags()
-        |> Steemex.Cleaner.parse_timedate_strings()
-        |> Steemex.Cleaner.parse_empty_strings()
+      cleaned =
+        comment
+        |> Cleaner.strip_token_names_and_convert_to_number()
+        |> Cleaner.parse_json_strings(:json_metadata)
+        |> Cleaner.extract_fields()
+        |> Cleaner.prepare_tags()
+        |> Cleaner.parse_timedate_strings()
+        |> Cleaner.parse_empty_strings()
+
       {:ok, cleaned}
     else
       err -> err
     end
   end
 
-
-  @doc"""
+  @doc """
   Returns a list of replies to the given content, accepts author and permlink.
 
   Example response:
@@ -134,13 +141,12 @@ defmodule Steemex.DatabaseApi do
   ...]
   ```
   """
-  @spec get_content_replies(String.t, String.t) :: map
+  @spec get_content_replies(String.t(), String.t()) :: map
   def get_content_replies(author, permlink) do
     call("get_content_replies", [author, permlink])
   end
 
-
-  @doc"""
+  @doc """
   If start_permlink is empty then only before_date will be considered. If both are specified the earlier of the two metrics will be used.
   before_date format is: `2017-02-07T14:34:11`
   Example response:
@@ -151,7 +157,7 @@ defmodule Steemex.DatabaseApi do
   [ContentResult, ContentResult, ...]
   ```
   """
-  @spec get_discussions_by_author_before_date(String.t, String.t, String.t, integer) :: map
+  @spec get_discussions_by_author_before_date(String.t(), String.t(), String.t(), integer) :: map
   def get_discussions_by_author_before_date(author, start_permlink, before_date, limit) do
     call("get_discussions_by_author_before_date", [author, start_permlink, before_date, limit])
   end
@@ -175,7 +181,7 @@ defmodule Steemex.DatabaseApi do
 
   # ACCOUNTS
 
-  @doc"""
+  @doc """
   Returns account data. Accepts a list of up to 1000 account names
 
   Example response:
@@ -222,12 +228,12 @@ defmodule Steemex.DatabaseApi do
   %{...}]
   ```
   """
-  @spec get_accounts([String.t]) :: [map]
+  @spec get_accounts([String.t()]) :: [map]
   def get_accounts(accounts) when is_list(accounts) do
     call("get_accounts", [accounts])
   end
 
-  @doc"""
+  @doc """
   Returns block header data. Accepts block height.
 
   Example response:
@@ -243,7 +249,7 @@ defmodule Steemex.DatabaseApi do
     call("get_block_header", [height])
   end
 
-  @doc"""
+  @doc """
   Unsurprisingly returns a map with dynamic global propeties.
   Example response:
 
@@ -273,7 +279,7 @@ defmodule Steemex.DatabaseApi do
     call("get_dynamic_global_properties", [])
   end
 
-  @doc"""
+  @doc """
   Unsurprisingly returns a map with chain propeties.
   Example result:
   ```
@@ -285,7 +291,7 @@ defmodule Steemex.DatabaseApi do
     call("get_chain_properties", [])
   end
 
-  @doc"""
+  @doc """
   Returns feed history
   Example response:
   ```
@@ -302,7 +308,7 @@ defmodule Steemex.DatabaseApi do
     call("get_feed_history", [])
   end
 
-  @doc"""
+  @doc """
   Returns node client config
 
   Example response:
@@ -349,11 +355,11 @@ defmodule Steemex.DatabaseApi do
   ```
   """
   @spec get_config() :: map
-  def get_config() do
+  def get_config do
     call("get_config", [])
   end
 
-  @doc"""
+  @doc """
   Returns current median history price.
   Example response:
   ```
@@ -361,21 +367,21 @@ defmodule Steemex.DatabaseApi do
   ```
   """
   @spec get_current_median_history_price() :: map
-  def get_current_median_history_price() do
+  def get_current_median_history_price do
     call("get_current_median_history_price", [])
   end
 
   # ACCOUNTS
-  @doc"""
+  @doc """
   Get account count
   Example response: 25290
   """
   @spec get_account_count() :: integer
-  def get_account_count() do
-   call("get_account_count", [])
+  def get_account_count do
+    call("get_account_count", [])
   end
 
-  @doc"""
+  @doc """
   Lookup accounts
   Example response:
   ```
@@ -383,10 +389,10 @@ defmodule Steemex.DatabaseApi do
   ```
   """
   def lookup_accounts(lower_bound_name, limit) do
-   call("lookup_accounts", [lower_bound_name,  limit])
+    call("lookup_accounts", [lower_bound_name, limit])
   end
 
-  @doc"""
+  @doc """
   Returns list of maps of account data.
 
   Example response:
@@ -430,24 +436,24 @@ defmodule Steemex.DatabaseApi do
        ...}, "witnesses_voted_for" => 10, "comment_count" => 0, ...}]
   ```
   """
-  @spec lookup_account_names([String.t]) :: [map]
+  @spec lookup_account_names([String.t()]) :: [map]
   def lookup_account_names(account_names) do
-   call("lookup_account_names", [account_names])
+    call("lookup_account_names", [account_names])
   end
 
-  @doc"""
+  @doc """
   Returns account operations history
   Example response:
   ```
     [[7817, %{"block" => 3107388, "id" => "2.17.1197661", "op" => ["vote", %{"author" => "vik", "permlink" => "dostupnyi-javascript-na-prikladnom-primere-sozdaniya-stranicy-saita-s-deistviyami-polzovatelei-golosa-v-realnom-vremeni", "voter" => "ontofractal", "weight" => 10000}], "op_in_trx" => 0, "timestamp" => "2017-02-03T12:36:06", "trx_id" => "dc866b17ba80fa0ca0fe283ca19ebea9193987bc", "trx_in_block" => 0, "virtual_op" => 0}], [7816, %{"block" => 3107390, "id" => "2.17.1197663", "op" => ["vote", %{"author" => "pro.bitcoin", "permlink" => "podkast-pro-bitkoin-samye-glavnye-novosti-iz-mira-kriptovalyut-vypusk-27", "voter" => "ontofractal", "weight" => 10000}], "op_in_trx" => 0, "timestamp" => "2017-02-03T12:36:12", "trx_id" => "a7ce75dcd43641edd498d77bb4a938c9cdeb7405", "trx_in_block" => 0, "virtual_op" => 0}]]
   ```
   """
-  @spec get_account_history(String.t, integer, integer) :: [map]
+  @spec get_account_history(String.t(), integer, integer) :: [map]
   def get_account_history(name, from, limit) do
-   call("get_account_history", [name, from, limit])
+    call("get_account_history", [name, from, limit])
   end
 
-  @doc"""
+  @doc """
   Returns witness schedule
 
   Example response:
@@ -464,32 +470,31 @@ defmodule Steemex.DatabaseApi do
   ```
   """
   @spec get_witness_schedule() :: map
-  def get_witness_schedule() do
-   call("get_witness_schedule", [])
+  def get_witness_schedule do
+    call("get_witness_schedule", [])
   end
 
-  @doc"""
+  @doc """
   Gets hardfork version
 
   Example response: `"0.14.0"`
   """
-  @spec get_hardfork_version() :: String.t
-  def get_hardfork_version() do
-   call("get_hardfork_version", [])
+  @spec get_hardfork_version() :: String.t()
+  def get_hardfork_version do
+    call("get_hardfork_version", [])
   end
 
-  @doc"""
+  @doc """
   Get next scheduled hardfork time
 
   Example result: `%{"hf_version" => "0.0.0", "live_time" => "2016-10-18T11:00:00"}`
   """
   @spec get_next_scheduled_hardfork() :: map
-  def get_next_scheduled_hardfork() do
-   call("get_next_scheduled_hardfork", [])
+  def get_next_scheduled_hardfork do
+    call("get_next_scheduled_hardfork", [])
   end
 
-
-  @doc"""
+  @doc """
   Get trending tags
 
   Example result:
@@ -510,12 +515,12 @@ defmodule Steemex.DatabaseApi do
   ...]
   ```
   """
-  @spec get_trending_tags(String.t, integer) :: [map]
+  @spec get_trending_tags(String.t(), integer) :: [map]
   def get_trending_tags(after_tag, limit) do
-   call("get_trending_tags", [after_tag, limit])
+    call("get_trending_tags", [after_tag, limit])
   end
 
-  @doc"""
+  @doc """
   Get discussions by the wanted metric. Accepts a metric atom and a map with a following query params: %{tag: `String.t`, limit: `integer`}
   ContentResult has the same shape as a result returned by get_content.
   Example result:
@@ -525,11 +530,11 @@ defmodule Steemex.DatabaseApi do
   """
   @spec get_discussions_by(atom, map) :: [map]
   def get_discussions_by(metric, query) do
-   method = "get_discussions_by_" <> Atom.to_string(metric)
-   call(method, [query])
+    method = "get_discussions_by_" <> Atom.to_string(metric)
+    call(method, [query])
   end
 
-  @doc"""
+  @doc """
   Get state for the provided path.
   Example result:
   ```
@@ -548,13 +553,12 @@ defmodule Steemex.DatabaseApi do
     "witnesses" => ... }
   ```
   """
-  @spec get_state(String.t) :: map
+  @spec get_state(String.t()) :: map
   def get_state(path) do
-   call("get_state", [path])
+    call("get_state", [path])
   end
 
-
-  @doc"""
+  @doc """
   Get categories. Accepts wanted metric, after_category, limit.
   Example result:
   ```
@@ -576,13 +580,13 @@ defmodule Steemex.DatabaseApi do
     "witnesses" => ... }
   ```
   """
-  @spec get_categories(atom, String.t, integer) :: [map]
+  @spec get_categories(atom, String.t(), integer) :: [map]
   def get_categories(metric, after_category, limit) do
-   method = "get_" <> Atom.to_string(metric)  <> "_categories"
-   call(method, [after_category, limit])
+    method = "get_" <> Atom.to_string(metric) <> "_categories"
+    call(method, [after_category, limit])
   end
 
-  @doc"""
+  @doc """
   Gets current GBG to GOLOS conversion requests for given account.
   Example result:
   ```
@@ -591,23 +595,22 @@ defmodule Steemex.DatabaseApi do
   ```
   """
   @spec get_conversion_requests() :: [map]
-  def get_conversion_requests() do
-   call("get_conversion_requests", ["ontofractal"])
+  def get_conversion_requests do
+    call("get_conversion_requests", ["ontofractal"])
   end
 
-
-  @doc"""
+  @doc """
   Returns past owner authorities that are valid for account recovery.
   Doesn't seem to work at this moment.
   ```
   ```
   """
-  @spec get_owner_history(String.t) :: [map]
+  @spec get_owner_history(String.t()) :: [map]
   def get_owner_history(name) do
-   call("get_owner_history", [name])
+    call("get_owner_history", [name])
   end
 
-  @doc"""
+  @doc """
   Returns order book.
 
   ## Example response
@@ -622,10 +625,10 @@ defmodule Steemex.DatabaseApi do
   """
   @spec get_order_book(integer) :: [map]
   def get_order_book(limit) do
-   call("get_order_book", [limit])
+    call("get_order_book", [limit])
   end
 
-  @doc"""
+  @doc """
   Returns open orders for the given account name.
 
   ## Example response
@@ -640,12 +643,12 @@ defmodule Steemex.DatabaseApi do
        ...]
   ```
   """
-  @spec get_open_orders(String.t) :: [map]
+  @spec get_open_orders(String.t()) :: [map]
   def get_open_orders(name) do
-   call("get_open_orders", [name])
+    call("get_open_orders", [name])
   end
 
-  @doc"""
+  @doc """
   Get witnesses by ids
 
   ## Example response
@@ -672,21 +675,20 @@ defmodule Steemex.DatabaseApi do
   %{...} ]
   ```
   """
-  @spec get_witnesses([String.t]) :: [map]
+  @spec get_witnesses([String.t()]) :: [map]
   def get_witnesses(ids) do
-   call("get_witnesses", [ids])
+    call("get_witnesses", [ids])
   end
 
-  @doc"""
+  @doc """
   Get witnesses by votes. Example response is the same as get_witnesses.
   """
   @spec get_witnesses_by_vote(integer, integer) :: [map]
   def get_witnesses_by_vote(from, limit) do
-   call("get_witnesses_by_vote", [from, limit])
+    call("get_witnesses_by_vote", [from, limit])
   end
 
-
-  @doc"""
+  @doc """
   Lookup witness accounts
 
   Example response:
@@ -694,23 +696,22 @@ defmodule Steemex.DatabaseApi do
   ["creator", "creatorgalaxy", "crypto", "cryptocat", "cyberfounder", "cybertech-01", "d00m", "dacom", "dance", "danet"]
   ```
   """
-  @spec lookup_witness_accounts(String.t, integer) :: [String.t]
+  @spec lookup_witness_accounts(String.t(), integer) :: [String.t()]
   def lookup_witness_accounts(lower_bound_name, limit) do
-   call("lookup_witness_accounts", [lower_bound_name,  limit])
+    call("lookup_witness_accounts", [lower_bound_name, limit])
   end
 
-  @doc"""
+  @doc """
   Get witness count
 
   Example response: `997`
   """
-  @spec get_witness_count() :: [String.t]
-  def get_witness_count() do
-   call("get_witness_count", [])
+  @spec get_witness_count() :: [String.t()]
+  def get_witness_count do
+    call("get_witness_count", [])
   end
 
-
-  @doc"""
+  @doc """
   Get active witnesses
 
   Example response:
@@ -721,13 +722,12 @@ defmodule Steemex.DatabaseApi do
    "kuna", "creator"]
   ```
   """
-  @spec get_active_witnesses() :: [String.t]
-  def get_active_witnesses() do
-   call("get_active_witnesses", [])
+  @spec get_active_witnesses() :: [String.t()]
+  def get_active_witnesses do
+    call("get_active_witnesses", [])
   end
 
-
-  @doc"""
+  @doc """
   Get miner queue
 
   Example response:
@@ -737,13 +737,12 @@ defmodule Steemex.DatabaseApi do
    "gtx-1080-sc-0023", "gtx-1080-sc-0080", ...]
   ```
   """
-  @spec get_miner_queue() :: [String.t]
-  def get_miner_queue() do
-   call("get_miner_queue", [])
+  @spec get_miner_queue() :: [String.t()]
+  def get_miner_queue do
+    call("get_miner_queue", [])
   end
 
-
-  @doc"""
+  @doc """
   Get *all* account votes
 
   Example response:
@@ -752,12 +751,12 @@ defmodule Steemex.DatabaseApi do
      "rshares" => 130036223, "time" => "2017-01-26T20:06:03", "weight" => 0},
      %{...}, ...] ```
   """
-  @spec get_account_votes(String.t) :: [map]
+  @spec get_account_votes(String.t()) :: [map]
   def get_account_votes(name) do
-   call("get_account_votes", [name])
+    call("get_account_votes", [name])
   end
 
-  @doc"""
+  @doc """
   Get active votes on the given content. Accepts author and permlink.
 
   Example response:
@@ -767,12 +766,12 @@ defmodule Steemex.DatabaseApi do
                "voter" => "hipster", "weight" => "51460692508758354"},
      %{...}, ...] ```
   """
-  @spec get_active_votes(String.t, String.t) :: [map]
+  @spec get_active_votes(String.t(), String.t()) :: [map]
   def get_active_votes(account, permlink) do
-   call("get_active_votes", [account, permlink])
+    call("get_active_votes", [account, permlink])
   end
 
-  @doc"""
+  @doc """
   Get followers. Accepts account, starting follower, follow type (blog, ignore), limit of results.
   Returns followers in ascending alphabetical order.
 
@@ -784,19 +783,19 @@ defmodule Steemex.DatabaseApi do
             "id" => "8.0.20183", "what" => ["blog"]},
      %{...}, ...] ```
   """
-  @spec get_followers(String.t, String.t, String.t, integer) :: [map]
+  @spec get_followers(String.t(), String.t(), String.t(), integer) :: [map]
   def get_followers(account, start_follower, follow_type, limit) do
-   Steemex.call(["follow_api", "get_followers", [account, start_follower, follow_type, limit]])
+    Steemex.call(["follow_api", "get_followers", [account, start_follower, follow_type, limit]])
   end
 
-  @doc"""
+  @doc """
   Get followings. Accepts account, starting following, follow type (blog, ignore), limit of results.
   Returns followings in ascending alphabetical order.
 
   Example response is the same as in get_followers.
   """
-  @spec get_following(String.t, String.t, String.t, integer) :: [map]
+  @spec get_following(String.t(), String.t(), String.t(), integer) :: [map]
   def get_following(account, start_follower, follow_type, limit) do
-   Steemex.call(["follow_api", "get_following", [account, start_follower, follow_type, limit]])
+    Steemex.call(["follow_api", "get_following", [account, start_follower, follow_type, limit]])
   end
 end

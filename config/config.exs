@@ -30,5 +30,6 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :steemex,
-  # url: System.get_env("STEEM_URL"),
-  activate_stage_sup: true
+  api: :steemit_api,
+  api_url: "https://api.steemit.com",
+  activate_stage_sup: false

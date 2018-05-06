@@ -1,4 +1,7 @@
 defmodule Steemex.Stage.ExampleConsumer do
+  @moduledoc """
+  An example of GenStage event consumer
+  """
   use GenStage
   alias Steemex.MungedOps
   require Logger
