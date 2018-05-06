@@ -2,6 +2,7 @@ defmodule Steemex do
   alias Steemex.DatabaseApi
   use Application
   require Logger
+  @default_api :steemit_api
 
   defdelegate get_current_median_history_price(), to: DatabaseApi
   defdelegate get_feed_history(), to: DatabaseApi
@@ -58,7 +59,7 @@ defmodule Steemex do
   def call(params, opts \\ [])
 
   def call(params, opts) do
-    case Application.get_env(:steemex, :api) do
+    case Application.get_env(:steemex, :api) || @default_api  do
       :steemit_api ->
         call_condenser(params, opts)
 
