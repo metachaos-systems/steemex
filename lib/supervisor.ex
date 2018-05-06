@@ -1,6 +1,7 @@
 defmodule Steemex.Supervisor do
   require Logger
   alias Steemex.StageSupervisor
+  @default_api :steemit_api
 
   def start_link do
     Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -9,7 +10,7 @@ defmodule Steemex.Supervisor do
   def init(:ok) do
     import Supervisor.Spec
     Logger.info("#{__MODULE__} is being initialized...")
-    api = Application.get_env(:steemex, :api)
+    api = Application.get_env(:steemex, :api) || @default_api
     activate_stage_sup? = Application.get_env(:steemex, :activate_stage_sup)
     stages = if activate_stage_sup?, do: [supervisor(StageSupervisor, [])], else: []
 
