@@ -1,7 +1,6 @@
 defmodule Steemex.Supervisor do
   require Logger
   alias Steemex.StageSupervisor
-  @default_ws_url "wss://steemd-int.steemit.com/"
 
   def start_link() do
     Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -10,25 +9,28 @@ defmodule Steemex.Supervisor do
   def init(:ok) do
     import Supervisor.Spec
     Logger.info("#{__MODULE__} is being initialized...")
-    url = Application.get_env(:steemex, :url) || @default_ws_url
-    Logger.info("Steemex WS url is set to #{url}")
+    api = Application.get_env(:steemex, :api)
     activate_stage_sup? = Application.get_env(:steemex, :activate_stage_sup)
-    activate_ws_processes? = Application.get_env(:steemex, :activate_ws_processes)
     stages = if activate_stage_sup?, do: [supervisor(StageSupervisor, [])], else: []
 
-    ws_processes =
-      if activate_ws_processes? do
-        [
-          worker(Steemex.IdStore, []),
-          worker(Steemex.WS, [url])
-        ]
-      else
-        []
+    processes =
+      case api do
+        :steemit_api ->
+          []
+
+        :jsonrpc_wss_api ->
+          url = Application.get_env(:steemex, :api_url)
+          if is_nil(url), do: throw("Steemex: websockets JSONRPC api URL is NOT configured!")
+          Logger.info("Steemex webscokets JSONRPC api URL is set to #{url}")
+
+          [
+            worker(Steemex.IdStore, []),
+            worker(Steemex.WS, [url])
+          ]
       end
 
-    children = ws_processes ++ stages
+    children = processes ++ stages
 
     Supervisor.init(children, strategy: :one_for_one, max_restarts: 10, max_seconds: 5)
   end
-
 end

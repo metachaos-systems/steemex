@@ -1,7 +1,7 @@
 defmodule Steemex.SteemitApiClient do
   alias JSONRPC2.Clients.HTTP
 
-  @url "https://api.steemit.com"
+  @url Application.get_env(:steemex, :api_url)
 
   def call([api, method, args]) do
     api = case api do
@@ -11,6 +11,5 @@ defmodule Steemex.SteemitApiClient do
     response = HTTP.call(@url, "#{api}.#{method}", args)
     {:ok, response}
   end
-
 
 end

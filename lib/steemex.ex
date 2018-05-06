@@ -3,7 +3,6 @@ defmodule Steemex do
   alias Steemex.IdStore
   require Logger
 
-
   defdelegate get_current_median_history_price(), to: Steemex.DatabaseApi
   defdelegate get_feed_history(), to: Steemex.DatabaseApi
   defdelegate get_chain_properties(), to: Steemex.DatabaseApi
@@ -24,9 +23,13 @@ defmodule Steemex do
   defdelegate get_discussions_by(metric, query), to: Steemex.DatabaseApi
   defdelegate get_categories(metric, after_category, query), to: Steemex.DatabaseApi
   defdelegate get_state(path), to: Steemex.DatabaseApi
-  defdelegate get_content_replies(author,permlink), to: Steemex.DatabaseApi
-  defdelegate get_discussions_by_author_before_date(author, start_permlink, before_date, limit), to: Steemex.DatabaseApi
-  defdelegate get_replies_by_last_update(author, start_permlink, before_date, limit), to: Steemex.DatabaseApi
+  defdelegate get_content_replies(author, permlink), to: Steemex.DatabaseApi
+
+  defdelegate get_discussions_by_author_before_date(author, start_permlink, before_date, limit),
+    to: Steemex.DatabaseApi
+
+  defdelegate get_replies_by_last_update(author, start_permlink, before_date, limit),
+    to: Steemex.DatabaseApi
 
   defdelegate get_owner_history(name), to: Steemex.DatabaseApi
   defdelegate get_conversion_requests(), to: Steemex.DatabaseApi
@@ -47,26 +50,49 @@ defmodule Steemex do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+
     children = [
       supervisor(Steemex.Supervisor, [])
     ]
+
     Supervisor.start_link(children, strategy: :one_for_one, max_restarts: 10, max_seconds: 5)
   end
 
   def call(params, opts \\ [])
 
-  def call(params, []) do
+  def call(params, opts) do
+    case Application.get_env(:steemex, :api) do
+      :steemit_api ->
+        call_condenser(params, opts)
+
+      :jsonrpc_wss_api ->
+        call_ws(params, opts)
+    end
+  end
+
+  def call_condenser(params, []) do
+    {:ok, result} = Steemex.SteemitApiClient.call(params)
+    AtomicMap.convert(result, safe: false, underscore: false)
+  end
+
+  def call_ws(params, []) do
     :ok = send({self, params})
 
-    response = receive do
-      {:ws_response, {_, _, response}} -> response
-    end
+    response =
+      receive do
+        {:ws_response, {_, _, response}} -> response
+      end
 
     err = response["err"]
     result = response["result"]
+
     case {err, result} do
-      {_, nil} -> {:error, nil}
-      {nil, _} -> {:ok, AtomicMap.convert(result, safe: false, underscore: false)}
+      {_, nil} ->
+        {:error, nil}
+
+      {nil, _} ->
+        {:ok, AtomicMap.convert(result, safe: false, underscore: false)}
+
       _ ->
         {:error, err}
     end
@@ -88,7 +114,6 @@ defmodule Steemex do
   end
 
   defp gen_id do
-    round(:rand.uniform * 1.0e16) |> Integer.to_string
+    round(:rand.uniform() * 1.0e16) |> Integer.to_string()
   end
-
 end
