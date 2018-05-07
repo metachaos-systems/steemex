@@ -1,6 +1,6 @@
 # Steemex
 
-Elixir websockets client for Steem JSONRPC interface. Steemex is a supervised application, so don't forget to add it to applications in mix.exs
+Elixir HTTP/Websockets client for Steem JSONRPC interface and official Steemit API. 
 
 ## Installation
 
@@ -14,25 +14,32 @@ Elixir websockets client for Steem JSONRPC interface. Steemex is a supervised ap
     end
     ```
 
-  2. Add 'steemex' to applications in `mix.exs`:
-    ```elixir
-    def application do
-      [applications: [:logger, :steemex]]
-    end
-    ```
-
 ## Configuration
 
-First, configure a websockets url for the steemd instance, for example, a public node `wss://steemd.steemit.com/` to the config.
+Stemeex doesn't require any configuration. If no config is provided, Steemex will use `http://api.steemit.com` condenser endpoint for all JSONRPC calls.
+
+If you want to use another transport, public node or private node, set corresponding values for `api` and `api_url`. Possible api values are `:steemit_api`, `:jsonrpc_ws_api`, `:jsonrpc_http_api`.
+
+
+
+If you are using http or ws api, you need to set a steemd instance url, for example, a public node `http://gtg.steem.house:8090` for jsonrpc_http_api.
+
+Example:
 
 ```elixir
 config :steemex,
-  url: System.get_env("STEEM_URL"),
+  api: :steemit_api,
+  api: :jsonrpc_http_api,
+  api_url: "http://gtg.steem.house:8090",
+  activate_stage_sup: false
 ```
 
-Steemex module includes structs for all operations types. Streamer module parses each operation and converts it to a corresponding struct.
+If want Steemex to stream incoming events in pseudo-realtime, set `activate_stage_sup` to `true` and see the example of a GenStage consumer.
+
 
 # JSONRPC API
+
+Steemex module includes structs for all operations types. Streamer module parses each operation and converts it to a corresponding struct.
 
 The main module function is `Steemex.call`. It will block the calling process and return a success tuple with a "result" data from the JSONRPC call response. JSONRPC call ids are handled automatically.
 
