@@ -56,14 +56,23 @@ defmodule Steemex do
 
   def call(params, opts \\ [])
 
+
   def call(params, opts) do
     case Application.get_env(:steemex, :api) || @default_api do
       :steemit_api ->
         call_condenser(params, opts)
 
-      :jsonrpc_wss_api ->
+      :jsonrpc_http_api ->
+        call_http(params, opts)
+
+      :jsonrpc_ws_api ->
         call_ws(params, opts)
     end
+  end
+
+  def call_http(params, opts \\ []) do
+    {:ok, result} = Steemex.HttpClient.call(params)
+    AtomicMap.convert(result, safe: false, underscore: false)
   end
 
   def call_condenser(params, []) do
