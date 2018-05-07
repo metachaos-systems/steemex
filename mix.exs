@@ -4,8 +4,8 @@ defmodule Steemex.Mixfile do
   def project do
     [
       app: :steemex,
-      version: "0.13.0",
-      elixir: "~> 1.4",
+      version: "0.14.0",
+      elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -46,7 +46,7 @@ defmodule Steemex.Mixfile do
 
   defp description do
     """
-    Elixir websockets library, operation streaming and utilities for Steem blockchain
+    Elixir HTTP/Websockets client library for official Steemit API and standard steemd JSONRPC interface. Includes module for pseudo realtime streaming of block, transaction and operation events.
     """
   end
 
@@ -56,7 +56,10 @@ defmodule Steemex.Mixfile do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["ontofractal"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/cyberpunk-ventures/steemex"}
+      links: %{
+        "GitHub" => "https://github.com/cyberpunk-ventures/steemex",
+        "Cyberpunk Ventures" => "http://cyberpunk.ventures"
+      }
     ]
   end
 end
