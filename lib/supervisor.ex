@@ -16,8 +16,6 @@ defmodule Steemex.Supervisor do
 
     processes =
       case api do
-        :steemit_api ->
-          []
 
         :jsonrpc_wss_api ->
           url = Application.get_env(:steemex, :api_url)
@@ -28,6 +26,10 @@ defmodule Steemex.Supervisor do
             worker(Steemex.IdStore, []),
             worker(Steemex.WS, [url])
           ]
+          
+       _ ->
+          []
+
       end
 
     children = processes ++ stages
