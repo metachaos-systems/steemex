@@ -56,7 +56,6 @@ defmodule Steemex do
 
   def call(params, opts \\ [])
 
-
   def call(params, opts) do
     case Application.get_env(:steemex, :api) || @default_api do
       :steemit_api ->

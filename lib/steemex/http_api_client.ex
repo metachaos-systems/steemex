@@ -7,5 +7,4 @@ defmodule Steemex.HttpClient do
     response = HTTP.call(@url, "#{api}.#{method}", args)
     {:ok, response}
   end
-
 end

@@ -16,8 +16,7 @@ defmodule Steemex.Supervisor do
 
     processes =
       case api do
-
-        :jsonrpc_wss_api ->
+        :jsonrpc_ws_api ->
           url = Application.get_env(:steemex, :api_url)
           if is_nil(url), do: throw("Steemex: websockets JSONRPC api URL is NOT configured!")
           Logger.info("Steemex webscokets JSONRPC api URL is set to #{url}")
@@ -26,10 +25,9 @@ defmodule Steemex.Supervisor do
             worker(Steemex.IdStore, []),
             worker(Steemex.WS, [url])
           ]
-          
-       _ ->
-          []
 
+        _ ->
+          []
       end
 
     children = processes ++ stages
