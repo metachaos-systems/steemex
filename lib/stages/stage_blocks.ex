@@ -22,8 +22,14 @@ defmodule Steemex.Stage.Blocks do
   end
 
   def handle_info(:tick, state) do
-    {:ok, %{head_block_number: height}} = Steemex.get_dynamic_global_properties()
     previous_height = Map.get(state, :previous_height, nil)
+
+    height =
+      with {:ok, glob_props} <- Steemex.get_dynamic_global_properties() do
+        glob_props.height
+      else
+        _ -> previous_height
+      end
 
     if height === previous_height do
       {:noreply, [], state}
@@ -39,7 +45,7 @@ defmodule Steemex.Stage.Blocks do
           {:noreply, [], state}
         end
       else
-        err -> {:noreply, [], state}
+        _err -> {:noreply, [], state}
       end
     end
   end
