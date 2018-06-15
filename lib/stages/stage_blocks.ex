@@ -35,14 +35,16 @@ defmodule Steemex.Stage.Blocks do
       {:noreply, [], state}
     else
       with {:ok, block} <- Steemex.get_block(height) do
-        if block do
-          block = Map.put(block, :height, height)
-          new_state = Map.put(state, :previous_height, height)
-          meta = %{source: :naive_realtime, type: :block}
-          events = [%Steemex.Event{data: block, metadata: meta}]
-          {:noreply, events, new_state}
-        else
-          {:noreply, [], state}
+        case block do
+          %Steemex.Block{} ->
+            block = Map.put(block, :height, height)
+            new_state = Map.put(state, :previous_height, height)
+            meta = %{source: :naive_realtime, type: :block}
+            events = [%Steemex.Event{data: block, metadata: meta}]
+            {:noreply, events, new_state}
+
+          nil ->
+            {:noreply, [], state}
         end
       else
         _err -> {:noreply, [], state}
