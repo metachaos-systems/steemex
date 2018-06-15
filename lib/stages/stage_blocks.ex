@@ -26,7 +26,7 @@ defmodule Steemex.Stage.Blocks do
 
     height =
       with {:ok, glob_props} <- Steemex.get_dynamic_global_properties() do
-        glob_props.height
+        glob_props.head_block_number
       else
         _ -> previous_height
       end
