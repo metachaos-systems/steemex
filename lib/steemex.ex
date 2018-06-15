@@ -70,13 +70,19 @@ defmodule Steemex do
   end
 
   def call_http(params, opts \\ []) do
-    {:ok, result} = Steemex.HttpClient.call(params)
-    AtomicMap.convert(result, safe: false, underscore: false)
+    with {:ok, result} <- Steemex.HttpClient.call(params) do
+      {:ok, AtomicMap.convert(result, safe: false, underscore: false)}
+    else
+      err -> err
+    end
   end
 
   def call_condenser(params, []) do
-    {:ok, result} = Steemex.SteemitApiClient.call(params)
-    AtomicMap.convert(result, safe: false, underscore: false)
+    with {:ok, result} <- Steemex.SteemitApiClient.call(params) do
+      {:ok, AtomicMap.convert(result, safe: false, underscore: false)}
+    else
+      err -> err
+    end
   end
 
   def call_ws(params, []) do

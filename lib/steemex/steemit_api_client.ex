@@ -14,7 +14,7 @@ defmodule Steemex.SteemitApiClient do
 
     case response do
       {:error, reason} -> {:error, reason}
-      r -> {:ok, r}
+      {:ok, data} -> {:ok, data}
     end
   end
 end
