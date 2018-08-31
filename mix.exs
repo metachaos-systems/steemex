@@ -40,6 +40,7 @@ defmodule Steemex.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:exconstructor, ">= 0.0.0"},
       {:jsonrpc2, "~> 1.0"},
+    {:plug, "~> 1.3"},
       {:hackney, ">= 0.0.0"}
     ]
   end
