@@ -81,7 +81,7 @@ defmodule Steemex.Stage.ExampleConsumer do
     {:noreply, [], state}
   end
 
-  def process_event(%{data: %MungedOps.Reblog{} = data, metadata: %{height: h, timestamp: t} = metadata}) do
+  def process_event(%{data: %MungedOps.Reblog{} = data, metadata: %{block_height: h, timestamp: t} = metadata}) do
       Logger.info """
       New reblog:
       #{inspect data}
