@@ -5,14 +5,14 @@ Elixir HTTP/Websockets client for Steem JSONRPC interface and official Steemit A
 ## Installation
 
   1. Add `steemex` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
+ 
+```elixir
+   def deps do
       [
         {:steemex, ">= 0.0.0"}
       ]
     end
-    ```
+```
 
 ## Configuration
 
