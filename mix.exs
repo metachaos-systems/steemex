@@ -4,7 +4,7 @@ defmodule Steemex.Mixfile do
   def project do
     [
       app: :steemex,
-      version: "0.14.2",
+      version: "0.14.3",
       elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -40,7 +40,7 @@ defmodule Steemex.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:exconstructor, ">= 0.0.0"},
       {:jsonrpc2, "~> 1.0"},
-    {:plug, "~> 1.3"},
+      {:plug, "~> 1.3"},
       {:hackney, ">= 0.0.0"}
     ]
   end
